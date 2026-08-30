@@ -11,10 +11,10 @@ export const SITE = {
   roleSubZh: 'AI 应用开发 · Python / 机器学习',
 
   /**
-   * 站点正式地址（GitHub Pages 用户站点），与 astro.config.mjs 的 site 保持一致，
+   * 站点正式地址（自定义域名，GitHub Pages 托管），与 astro.config.mjs 的 site 保持一致，
    * 用于 canonical URL / Open Graph / sitemap。
    */
-  url: 'https://xiaolantongxue666.github.io',
+  url: 'https://lanyongzhong.app',
 
   /** 公开联系方式：只保留邮箱，手机号与微信不公开 */
   email: 'lanyongzhong0929@qq.com',

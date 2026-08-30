@@ -138,7 +138,7 @@ Case Study 与实习经历直接了解候选人。两份 PDF 简历仅本地保�
 
 ## Deployment（GitHub Pages）
 
-站点部署在 GitHub Pages 用户站点：**https://xiaolantongxue666.github.io**
+站点部署在 GitHub Pages（自定义域名）：**https://lanyongzhong.app**
 
 仓库固定为 `xiaolantongxue666/xiaolantongxue666.github.io`（用户站点，base 为根路径，
 页面内部链接无需任何前缀改造）。部署通过 GitHub Actions 自动完成：
@@ -158,7 +158,7 @@ Case Study 与实习经历直接了解候选人。两份 PDF 简历仅本地保�
 3. 仓库 **Settings → Pages → Build and deployment → Source** 选择
    **GitHub Actions**（首次部署前设置一次即可）。
 4. 之后每次 `git push`，Actions 会自动构建并发布，约 1–2 分钟后
-   https://xiaolantongxue666.github.io 生效。
+   https://lanyongzhong.app 生效（域名在 Name.com 注册，学生包首年免费，次年续费约 US$22.99）。
 
 ### 注意事项
 

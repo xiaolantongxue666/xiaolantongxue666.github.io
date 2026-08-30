@@ -4,10 +4,10 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// GitHub Pages 用户站点：https://xiaolantongxue666.github.io
-// 仓库固定为 xiaolantongxue666/xiaolantongxue666.github.io（base 为根路径，无需改页面链接）
+// 自定义域名（GitHub Pages）：https://lanyongzhong.app
+// DNS 已指向 GitHub Pages；域名在 Name.com 注册（学生包首年免费）
 export default defineConfig({
-  site: 'https://xiaolantongxue666.github.io',
+  site: 'https://lanyongzhong.app',
   trailingSlash: 'never',
   integrations: [mdx(), sitemap()],
   vite: {
