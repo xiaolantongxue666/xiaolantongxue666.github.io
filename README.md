@@ -136,25 +136,38 @@ Case Study 与实习经历直接了解候选人。两份 PDF 简历仅本地保�
 - 首页 / 列表页卡片配图在 frontmatter 的 `cover` / `coverAlt` 字段配置；
   没有真实截图的项目不要配图。
 
-## Deployment
+## Deployment（GitHub Pages）
 
-静态产物，任何静态托管均可。
+站点部署在 GitHub Pages 用户站点：**https://xiaolantongxue666.github.io**
 
-### Cloudflare Pages
+仓库固定为 `xiaolantongxue666/xiaolantongxue666.github.io`（用户站点，base 为根路径，
+页面内部链接无需任何前缀改造）。部署通过 GitHub Actions 自动完成：
+`.github/workflows/deploy.yml` 在每次 push 到 main 分支时安装依赖、构建并发布。
 
-- 构建命令：`npm run build`，输出目录：`dist`
-- Framework preset 选 Astro
+### 首次部署步骤
 
-### Vercel
+1. 在 GitHub 上新建**空仓库**，名称必须是 `xiaolantongxue666.github.io`
+   （不要勾选 README / .gitignore / License）。
+2. 本地推送（在 portfolio 目录下）：
 
-- 导入仓库后 Framework 选 Astro，其余默认即可
+   ```bash
+   git remote add origin https://github.com/xiaolantongxue666/xiaolantongxue666.github.io.git
+   git push -u origin main
+   ```
 
-### 部署前必做（替换域名 TODO）
+3. 仓库 **Settings → Pages → Build and deployment → Source** 选择
+   **GitHub Actions**（首次部署前设置一次即可）。
+4. 之后每次 `git push`，Actions 会自动构建并发布，约 1–2 分钟后
+   https://xiaolantongxue666.github.io 生效。
 
-1. `astro.config.mjs`：`site` 改为真实域名（影响 sitemap / canonical）
-2. `src/config.ts`：`url` 改为同一域名
-3. `public/robots.txt`：Sitemap 行替换为真实域名
-4. 绑定自定义域名后确认 `https://<域名>/sitemap-index.xml` 可访问
+### 注意事项
+
+- 站点地址同时写在三处，改域名时需同步：`astro.config.mjs`（site）、
+  `src/config.ts`（url）、`public/robots.txt`（Sitemap）。
+- 若以后改用项目站点（仓库名不是 xiaolantongxue666.github.io），需要为所有
+  内部链接加 base 前缀，不建议；绑定自定义域名时把三处地址换成域名即可。
+- 也可以部署到 Cloudflare Pages（构建命令 `npm run build`，输出目录 `dist`）
+  或 Vercel（Framework 选 Astro），步骤从略。
 
 ## 待补充内容（TODO）
 
