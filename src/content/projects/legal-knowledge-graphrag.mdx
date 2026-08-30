@@ -1,0 +1,162 @@
+---
+slug: legal-knowledge-graphrag
+order: 1
+title: 法律法规智能知识图谱与问答系统
+titleEn: Legal Knowledge Graph & GraphRAG QA System
+summary: 面向政府机构法律法规知识库场景，基于 RAGFlow、Neo4j 和 Elasticsearch 构建从非结构化文档解析、知识图谱生成到 GraphRAG 智能问答的完整流程。
+role: AI 大模型开发实习生
+company: 浮木科技有限公司
+duration: 2026.05 – 2026.07
+focus: Document AI / Knowledge Graph / GraphRAG
+type: 实习项目
+tags:
+  - Python
+  - RAGFlow
+  - Neo4j
+  - Elasticsearch
+  - ChromaDB
+  - MinerU
+  - DeepDoc
+  - Qwen
+  - GLM
+  - DeepSeek
+  - text-embedding-v3
+metrics:
+  - value: 5000+
+    label: 知识图谱节点
+  - value: 10000+
+    label: 关系数量
+  - value: 90% → 95%
+    label: 检索召回率
+cover: /images/projects/graphrag/knowledge-graph.png
+coverAlt: 法律法规领域知识图谱运行结果可视化
+---
+
+import Figure from '../../components/mdx/Figure.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import ArchDiagram from '../../components/mdx/ArchDiagram.astro';
+import PipelineFlow from '../../components/mdx/PipelineFlow.astro';
+
+## 从非结构化法规文件到可检索知识
+
+项目面向政府机构法律法规知识库场景。原始资料包含 PDF、扫描件和 Word
+等不同形式，需要首先完成文档解析与结构化处理，再进一步抽取实体与关系、构建知识图谱，最终服务于智能检索与问答。
+
+<Callout title="我的角色">
+  <p>
+    项目前期参与整体流程协作，后期主要负责<strong>知识图谱制作相关模块</strong>，同时参与文档解析、图谱抽取策略、向量检索和 GraphRAG
+    问答链路的实现与优化。
+  </p>
+</Callout>
+
+## 解决复杂表格解析问题
+
+使用 MinerU 和 DeepDoc 处理 PDF 与扫描文档，并针对长表格、跨行和跨页表格调整解析逻辑。通过位置坐标判断跨页关系、合并跨页单元格、处理单列内容续接并过滤重复表头，提升复杂表格解析效果。
+
+<MetricGrid
+  metrics={[{ value: '70% → 90%', label: '表格解析准确率' }]}
+  cols={2}
+/>
+
+法律法规文档中大量内容以表格形式承载（如处罚标准、事项清单），表格解析质量直接决定后续实体与关系抽取的上限，因此这一步是整个流程的基础。
+
+## 领域本体驱动的知识图谱构建
+
+相比让大模型直接自由抽取三元组，项目采用**先构建领域本体库，再通过本体约束和引导 LLM 抽取**的方式，提高实体及关系抽取的一致性。
+
+本体提前定义了法律法规领域的实体类型与关系类型，例如法律法规、行政主体、违法行为、处罚规则等节点类型，以及“依据”“处罚”“适用”等关系类型。模型在抽取时不再面对开放的标签空间，而是从受控的本体中选择，显著减少了同一实体被抽成不同类型、同一关系被写成不同名称这类不一致问题。
+
+<MetricGrid
+  metrics={[
+    { value: '5000', label: '节点总数' },
+    { value: '12', label: '节点类型' },
+    { value: '10000', label: '关系总数' },
+    { value: '30', label: '关系类型' },
+  ]}
+/>
+
+<Figure
+  src="/images/projects/graphrag/knowledge-graph.png"
+  alt="法律法规领域知识图谱运行结果可视化，中心为密集的实体关系网络，左右两侧分别为本体使用情况与实体类型图例"
+  caption="领域知识图谱运行结果示例"
+  wide
+/>
+
+### 本体约束 + 多模型交叉校验
+
+在抽取执行层面，使用 Qwen、GLM、DeepSeek 等模型进行三元组抽取，并通过跨模型结果交叉校验减少单模型产生的不稳定结果；最终图谱存储在 Neo4j 中。
+
+单独依赖某一个模型时，抽取结果会随着提示词、文档措辞的变化产生波动。多模型交叉校验的做法是：对同一段落分别抽取，仅保留多模型一致或经过仲裁确认的三元组，用一致率换准确率，牺牲部分召回换取图谱整体的可信度。
+
+## 从单次抽取流程到可管理的图谱工程
+
+项目实际运行过程中需要同时管理不同领域、不同抽取策略以及图谱和向量数据状态。系统界面提供了领域项目管理、运行、编辑以及图谱/向量库状态查看等能力。
+
+<Figure
+  src="/images/projects/graphrag/tool-ui.png"
+  alt="图谱工程管理界面：多个领域项目卡片，展示抽取模式、图谱与向量库状态以及运行、编辑、查看图谱等操作入口"
+  caption="领域项目管理与图谱 / 向量库状态界面示例"
+/>
+
+知识图谱构建不是一次性的脚本运行，而是一个持续进行的工程过程：新文档会不断入库，本体和抽取策略需要迭代，不同领域的图谱和向量库需要分别管理版本与状态。这要求把抽取流程封装成可重复运行、可增量补充、可回溯状态的任务，而不是一段一次性代码。
+
+## 从纯向量 RAG 到 GraphRAG
+
+对文本块和图谱节点分别进行向量化，构建文本检索与图谱检索双路信息来源；向量存储由 ChromaDB 本地方案逐步迁移到 Elasticsearch 统一管理。引入图谱信息后，逻辑关系类问题的检索效果得到改善，检索召回率由 90% 提升至 95%。
+
+<ArchDiagram />
+
+<MetricGrid
+  metrics={[
+    { value: '90% → 95%', label: '检索召回率（Retrieval Recall）' },
+  ]}
+  cols={2}
+/>
+
+<Callout title="指标说明">
+  <p>此处 90% → 95% 指的是<strong>检索召回率</strong>的提升，不是回答准确率。</p>
+</Callout>
+
+两类检索各有分工：向量检索擅长语义相近的段落召回，但对“A 法规的处罚由哪个机关执行”这类需要多跳关系的逻辑问题无能为力；图谱检索沿关系边查找，恰好补上逻辑关系类问题的缺口。两路上下文融合后交给 LLM 生成回答，效果优于任何单一来源。
+
+## 从文档到答案（From Document to Answer）
+
+整个系统的端到端工程链路：
+
+<PipelineFlow
+  steps={[
+    'PDF / 扫描件 / Word',
+    'MinerU / DeepDoc 解析',
+    '结构化内容',
+    '本体约束 + LLM 抽取',
+    'Neo4j 知识图谱 + Elasticsearch',
+    'GraphRAG 双路检索',
+    '生成回答',
+  ]}
+  notes={[
+    '多格式原始文档接入',
+    '复杂表格与跨页内容处理',
+    '文本块结构化与向量化',
+    '本体约束下的三元组抽取与交叉校验',
+    '图谱与向量双存储',
+    '文本 + 图谱双路上下文融合',
+    'LLM 生成最终回答',
+  ]}
+/>
+
+<MetricGrid
+  metrics={[
+    { value: '7–8 min', label: '约 10 页文档从入库到可问答' },
+  ]}
+  cols={2}
+/>
+
+从文档入库到进入可问答状态约需 7–8 分钟（约 10 页文档量级），覆盖解析、抽取、图谱写入与向量化全过程，是批处理式的吞吐节奏，不是毫秒级的实时响应。
+
+## 经验与反思
+
+- **文档解析是知识工程的地基。** 跨页表格、扫描件质量等“脏问题”消耗了项目前期最多的调试精力，解析质量直接决定图谱上限。
+- **本体先行优于自由抽取。** 先定义领域本体再约束 LLM 抽取，是控制抽取一致性的最有效手段；自由抽取的结果几乎无法直接入库。
+- **多模型交叉校验是用一致率换准确率。** 单模型抽取便宜但不稳定，多模型一致的信念更值得写入图谱。
+- **GraphRAG 的价值在逻辑关系类问题。** 向量检索解决“语义相近”，图谱检索解决“关系推理”，双路融合才是完整答案。

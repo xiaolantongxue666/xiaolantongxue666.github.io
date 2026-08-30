@@ -1,0 +1,29 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+  /** 大屏优先宽幅展示 */
+  wide?: boolean;
+}
+const { src, alt, caption, width = 1920, height = 945, wide = false } = Astro.props;
+---
+
+<figure class:list={['my-8', wide && 'md:-mx-6 lg:-mx-10']}>
+  <div class="overflow-hidden rounded-2xl border border-white/70 bg-white shadow-card">
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+      class="h-auto w-full"
+    />
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-xs leading-relaxed text-faint">{caption}</figcaption>
+  )}
+</figure>

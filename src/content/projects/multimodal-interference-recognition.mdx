@@ -1,0 +1,94 @@
+---
+slug: multimodal-interference-recognition
+order: 3
+title: 多模态深度学习干扰智能识别系统
+titleEn: Multimodal Interference Recognition System
+summary: 面向 5G / 6G 无线网络的小区级干扰识别问题，基于 PRB 噪声矩阵和业务元数据构建数据处理、特征提取、模型训练和推理流程。
+type: 研究生项目经历
+focus: Deep Learning / Multi-label Learning / Experiment Analysis
+tags:
+  - Python
+  - PyTorch
+  - CNN
+  - Transformer
+  - Multi-label Learning
+  - Focal Loss
+metrics:
+  - value: 92.71%
+    label: 验证准确率
+  - value: '0.8398'
+    label: Macro F1
+  - value: 24 × 273
+    label: PRB 矩阵输入
+---
+
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import PipelineFlow from '../../components/mdx/PipelineFlow.astro';
+import Callout from '../../components/mdx/Callout.astro';
+
+## 问题：小区级干扰识别
+
+面向 5G / 6G 无线网络的小区级干扰识别问题，基于 PRB 噪声矩阵和业务元数据构建数据处理、特征提取、模型训练和推理流程。
+
+无线网络中的干扰类型多样（如阻塞干扰、外部干扰、混频干扰等），不同干扰的成因和处置方式完全不同。人工基于频谱图判读效率低且依赖经验，因此需要一个能直接从网络运行数据中自动识别干扰类型的模型。
+
+## 输入与特征
+
+模型输入为 24 × 273 的 PRB 噪声矩阵（时间 × 频域资源块），并融合业务元数据共同建模。
+
+<PipelineFlow
+  steps={[
+    'PRB 噪声矩阵（24 × 273）',
+    '统计特征',
+    '空间特征',
+    '频率特征',
+    '业务元数据',
+  ]}
+  notes={[
+    '小区级时频二维噪声数据',
+    '统计特征：能量分布、方差、峰值等',
+    '空间特征：干扰在时频域的分布形态',
+    '频率特征：频域选择性、带宽占用模式',
+    '业务元数据辅助判别',
+  ]}
+/>
+
+单看噪声矩阵的原始数值不足以区分相似干扰，因此从统计、空间、频率三个角度分别提取特征，再与业务元数据一起构成多模态输入。
+
+## 模型架构
+
+采用 CNN + Transformer + Metadata Fusion 的混合架构：
+
+- **CNN** 提取 PRB 矩阵的局部时频纹理；
+- **Transformer** 建模时频域的长距离依赖；
+- **Metadata Fusion** 将业务元数据与深度特征融合，补充网络运行语境。
+
+## 训练策略
+
+- **Label-specific Attention**：针对多标签识别任务，为不同标签学习各自关注的特征通道；
+- **Differential Data Augmentation**：差异化数据增强，提升模型对不同干扰形态的鲁棒性；
+- **Improved Focal Loss**：改进的 Focal Loss 缓解类别不均衡与难样本问题；
+- **CosineAnnealingLR**：余弦退火学习率调度，改善收敛稳定性。
+
+## 项目成果
+
+<MetricGrid
+  metrics={[
+    { value: '92.71%', label: '验证准确率' },
+    { value: '0.8398', label: 'Macro F1' },
+  ]}
+/>
+
+验证准确率 92.71%，Macro F1 0.8398。Macro F1 低于准确率，说明部分小类别（样本量少的干扰类型）仍然是短板——这也是引入 Focal Loss 与 Label-specific Attention 的直接原因。
+
+<Callout title="项目限制与后续方向">
+  <p>
+    当前模型对<strong>未知干扰类型识别能力不足</strong>，后续考虑采用开放集识别（OSR）或异常检测方法进一步优化。
+  </p>
+</Callout>
+
+## 经验与反思
+
+- **多标签场景要为“标签”建模，而不只是为“样本”建模。** Label-specific Attention 让不同干扰类型各自关注最有效的特征，是小类别提升的关键。
+- **损失函数设计要贴合指标。** 关心 Macro F1 就要在训练中显式处理类别不均衡，Focal Loss 的改进直接服务于这一目标。
+- **诚实的失败分析比指标更有价值。** 模型对未见过的干扰类型泛化能力有限，这一限制推动了向开放集识别方向的后续探索。

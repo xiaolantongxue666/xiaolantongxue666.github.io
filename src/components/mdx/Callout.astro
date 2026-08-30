@@ -1,0 +1,18 @@
+---
+interface Props {
+  /** 左侧小标题（可选） */
+  title?: string;
+}
+const { title } = Astro.props;
+---
+
+<aside class="my-7 rounded-2xl border border-accent/20 bg-accent/[0.045] px-5 py-4">
+  {
+    title && (
+      <p class="text-[13px] font-semibold tracking-wide text-accent-deep">{title}</p>
+    )
+  }
+  <div class="text-sm leading-[1.85] text-muted [&>p]:!m-0 [&>p]:!max-w-none">
+    <slot />
+  </div>
+</aside>

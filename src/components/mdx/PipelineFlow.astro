@@ -1,0 +1,30 @@
+---
+/**
+ * 纵向流程图：编号节点 + 连接线。
+ */
+interface Props {
+  steps: string[];
+  /** 步骤下的补充说明（与 steps 一一对应，可省略） */
+  notes?: (string | undefined)[];
+}
+const { steps, notes } = Astro.props;
+---
+
+<ol class="my-8" role="list">
+  {
+    steps.map((step, i) => (
+      <li class="relative flex gap-4 pb-6 last:pb-0">
+        {i < steps.length - 1 && (
+          <span class="absolute top-7 left-[11px] h-full w-px bg-line" aria-hidden="true" />
+        )}
+        <span class="relative z-10 flex size-6 shrink-0 items-center justify-center rounded-full border border-line bg-white font-mono text-[11px] text-muted">
+          {i + 1}
+        </span>
+        <div class="min-w-0 pt-0.5">
+          <p class="text-sm font-medium text-ink md:text-[15px]">{step}</p>
+          {notes?.[i] && <p class="mt-1 text-xs leading-relaxed text-faint">{notes[i]}</p>}
+        </div>
+      </li>
+    ))
+  }
+</ol>

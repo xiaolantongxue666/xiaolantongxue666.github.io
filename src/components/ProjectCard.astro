@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Metric from './Metric.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  /** 序号，奇偶决定图文左右交错 */
+  index?: number;
+}
+const { project, index = 0 } = Astro.props;
+const { title, titleEn, summary, tags, metrics, cover, coverAlt, order, slug } = project.data;
+const href = `/projects/${slug}`;
+const flip = index % 2 === 1;
+---
+
+<article class="grid items-center gap-9 lg:grid-cols-2 lg:gap-14">
+  <!-- 文字侧 -->
+  <div class:list={[flip && 'lg:order-2']}>
+    <p class="font-mono text-sm font-semibold text-grad" aria-hidden="true">
+      {String(order).padStart(2, '0')}
+    </p>
+    <h3 class="mt-3 text-2xl font-semibold tracking-tight text-ink md:text-[1.7rem]">
+      <a href={href} class="transition-colors hover:text-accent-deep">
+        {title}
+      </a>
+    </h3>
+    <p class="mt-1.5 font-mono text-xs tracking-wide text-faint">{titleEn}</p>
+    <p class="mt-4 text-[15px] leading-[1.9] text-muted">{summary}</p>
+
+    {
+      metrics.length > 0 && (
+        <div class="glass mt-6 grid grid-cols-1 gap-4 rounded-2xl px-6 py-5 sm:grid-cols-3 sm:gap-3">
+          {metrics.map((m) => (
+            <Metric value={m.value} label={m.label} />
+          ))}
+        </div>
+      )
+    }
+
+    <ul class="mt-5 flex flex-wrap gap-2" role="list">
+      {tags.slice(0, 5).map((tag) => (
+        <li class="chip font-mono text-[0.72rem]">{tag}</li>
+      ))}
+    </ul>
+
+    <a
+      href={href}
+      class="arrow-link mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-accent-deep"
+    >
+      查看 Case Study <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <!-- 视觉侧：真实截图或指标视觉面板（不放假截图） -->
+  <div class:list={['min-w-0', flip && 'lg:order-1']}>
+    {
+      cover ? (
+        <div class="overflow-hidden rounded-3xl border border-white/70 bg-white shadow-soft">
+          <img
+            src={cover}
+            alt={coverAlt ?? `${title} 界面截图`}
+            width="1920"
+            height="945"
+            loading="lazy"
+            decoding="async"
+            class="h-auto w-full object-cover"
+          />
+        </div>
+      ) : (
+        <div class="grad-soft relative flex aspect-[16/10] flex-col justify-center gap-6 overflow-hidden rounded-3xl border border-white/70 px-10 shadow-card md:px-14">
+          <svg
+            class="pointer-events-none absolute -top-20 -right-20 opacity-60"
+            width="260"
+            height="260"
+            viewBox="0 0 260 260"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="130" cy="130" r="128" stroke="url(#ringGrad)" stroke-width="1" />
+            <circle cx="130" cy="130" r="92" stroke="url(#ringGrad)" stroke-width="1" />
+            <circle cx="130" cy="130" r="56" stroke="url(#ringGrad)" stroke-width="1" />
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="260" y2="260">
+                <stop stop-color="#7C3AED" stop-opacity="0.5" />
+                <stop offset="1" stop-color="#0891B2" stop-opacity="0.5" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <p class="font-mono text-xs tracking-widest text-faint">{titleEn}</p>
+          <ul class="relative space-y-5" role="list">
+            {metrics.map((m) => (
+              <li class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-line/80 pb-4 last:border-0 last:pb-0">
+                <span class="text-grad text-3xl font-bold tracking-tight tabular-nums md:text-4xl">
+                  {m.value}
+                </span>
+                <span class="text-sm font-medium text-muted">{m.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</article>

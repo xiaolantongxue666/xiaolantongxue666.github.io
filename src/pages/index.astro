@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import BentoGrid from '../components/BentoGrid.astro';
+import SectionDots from '../components/SectionDots.astro';
+import SectionHead from '../components/SectionHead.astro';
+import DirectionCard from '../components/DirectionCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExperienceTimeline, { type TimelineItem } from '../components/ExperienceTimeline.astro';
+import SkillGroup from '../components/SkillGroup.astro';
+import { SITE } from '../config';
+import { getProjects } from '../lib/projects';
+
+const description =
+  '兰永重的个人技术 Portfolio，展示 AI 大模型应用、RAG / GraphRAG、知识图谱、Python、机器学习与模型部署相关项目和实习经历。';
+
+const projects = await getProjects();
+
+const timeline: TimelineItem[] = [
+  {
+    period: '2026.05 – 2026.07',
+    company: '浮木科技有限公司',
+    role: 'AI 大模型开发实习',
+    desc: '参与法律法规智能知识图谱与问答系统开发，覆盖文档解析、知识图谱构建、向量检索和 GraphRAG 等环节，后期独立负责图谱制作模块。',
+    tech: ['Python', 'RAGFlow', 'Neo4j', 'Elasticsearch', 'MinerU', 'DeepDoc', 'Qwen', 'GLM', 'DeepSeek'],
+  },
+  {
+    period: '2023.07 – 2023.09',
+    company: '北京前锋互联科技有限公司武汉分公司',
+    role: '数据分析师实习',
+    desc: '基于 Python、Selenium 和浏览器驱动搭建抖音数据采集流程，对平台数据进行爬取、清洗和结构化处理，并使用 Pandas 进行统计分析和可视化输出。',
+    tech: ['Python', 'Selenium', 'Pandas', 'Data Collection', 'Data Analysis'],
+  },
+];
+
+const skillGroups = [
+  { title: 'Programming', skills: ['Python', 'SQL', 'Java', 'C'] },
+  { title: 'AI / Machine Learning', skills: ['PyTorch', 'Transformers', 'Machine Learning', 'Deep Learning', 'CNN', 'Transformer'] },
+  { title: 'LLM Applications', skills: ['RAG', 'GraphRAG', 'RAGFlow', 'Prompt Engineering', 'LLM Application Development'] },
+  { title: 'Knowledge & Retrieval', skills: ['Neo4j', 'Elasticsearch', 'ChromaDB', 'Knowledge Graph', 'Vector Retrieval'] },
+  { title: 'Document AI', skills: ['MinerU', 'DeepDoc', 'OCR', 'Document Parsing'] },
+  { title: 'Deployment', skills: ['ONNX', 'Int8 Quantization', 'RK3588', 'Jetson'] },
+];
+---
+
+<BaseLayout title={SITE.name} description={description} path="/">
+  <SectionDots />
+  <Hero />
+  <BentoGrid />
+
+  <!-- What I Do -->
+  <section id="what-i-do" class="scroll-mt-20" aria-labelledby="what-i-do-title">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <SectionHead
+          center
+          id="what-i-do-title"
+          eyebrow="技术方向"
+          title="两个求职方向，一条技术路径"
+          desc="从 Python 与数据出发，经过机器学习与模型工程，走向 RAG / 知识图谱与大模型应用开发。网站按这条路径完整展示项目与实习经历。"
+      />
+      <div class="grid gap-5 md:grid-cols-2">
+        <DirectionCard
+          title="AI Application Development"
+          subtitle="RAG · GraphRAG · Knowledge Graph"
+          desc="面向真实业务场景进行大模型应用开发，包括非结构化文档解析、RAG、GraphRAG、知识图谱、向量检索以及 Prompt 设计。目前已有法律法规知识库和智能问答系统的完整开发经历。"
+          tags={['RAG', 'GraphRAG', 'Knowledge Graph', 'Neo4j', 'Elasticsearch', 'RAGFlow', 'Prompt Engineering', 'LLM']}
+        />
+        <DirectionCard
+          title="Python & Machine Learning Engineering"
+          subtitle="Python · PyTorch · ONNX"
+          desc="使用 Python 进行数据采集、数据处理、特征工程和模型开发，并具备深度学习训练、模型推理以及 ONNX / Int8 量化部署相关实践。"
+          tags={['Python', 'Pandas', 'PyTorch', 'Transformers', 'Feature Engineering', 'Deep Learning', 'ONNX', 'Model Deployment']}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Projects：大图交替布局 -->
+  <section id="projects" class="scroll-mt-20" aria-labelledby="selected-projects-title">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <SectionHead
+          center
+          id="selected-projects-title"
+          eyebrow="精选项目"
+          title="核心项目"
+          desc="三个项目分别覆盖大模型应用工程、机器学习模型工程与深度学习实验分析，构成一条完整的能力证据链。"
+      />
+
+      <div class="space-y-20 md:space-y-28">
+        {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="scroll-mt-20" aria-labelledby="experience-heading">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <SectionHead center id="experience-heading" eyebrow="实习经历" title="实习与项目经历" />
+
+      <!-- 能力路径：2023 → 2025 → 2026（2025 为研究生项目经历） -->
+      <div class="glass mb-14 grid gap-4 rounded-3xl p-6 sm:grid-cols-3 md:p-8">
+        {[
+          { year: '2023', label: 'Data / Python' },
+          { year: '2025', label: 'Machine Learning / Model Engineering（研究生项目经历）' },
+          { year: '2026', label: 'RAG / Knowledge Graph / GraphRAG' },
+        ].map((step, i) => (
+          <div class="flex items-center gap-4 sm:flex-col sm:items-start sm:gap-2">
+            <p class="text-grad font-mono text-xl font-bold">{step.year}</p>
+            <p class="flex-1 text-sm leading-relaxed text-muted">{step.label}</p>
+            {i < 2 && (
+              <span class="hidden text-line sm:block" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <ExperienceTimeline items={timeline} />
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="scroll-mt-20" aria-labelledby="skills-heading">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <SectionHead center id="skills-heading" eyebrow="技能清单" title="技术能力" />
+      <div class="glass grid gap-x-10 gap-y-10 rounded-3xl p-8 sm:grid-cols-2 md:p-12 lg:grid-cols-3">
+        {skillGroups.map((group) => <SkillGroup title={group.title} skills={group.skills} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education" class="scroll-mt-20" aria-labelledby="education-heading">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <SectionHead center id="education-heading" eyebrow="求学经历" title="教育背景" />
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="glass rounded-3xl p-8">
+          <p class="font-mono text-xs tracking-wide text-faint">2024.09 – 2027.07</p>
+          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 硕士在读</h3>
+          <p class="mt-3 text-sm text-muted">主要相关课程</p>
+          <ul class="mt-3 flex flex-wrap gap-2" role="list">
+            {['机器学习', '深度学习', '计算机视觉', '数字图像处理与分析'].map((c) => (
+              <li class="chip">{c}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <p class="font-mono text-xs tracking-wide text-faint">2020.09 – 2024.07</p>
+          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 本科</h3>
+          <p class="mt-3 text-sm text-muted">主要相关课程</p>
+          <ul class="mt-3 flex flex-wrap gap-2" role="list">
+            {['Python 程序设计', '数据结构', '信号与系统', '通信原理'].map((c) => (
+              <li class="chip">{c}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="scroll-mt-20" aria-labelledby="contact-title">
+    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+      <div class="grad-soft relative overflow-hidden rounded-3xl border border-white/70 px-8 py-12 text-center shadow-card md:py-16">
+        <svg
+          class="pointer-events-none absolute -top-24 -right-24 opacity-50"
+          width="300"
+          height="300"
+          viewBox="0 0 300 300"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="150" cy="150" r="148" stroke="url(#contactRing)" stroke-width="1"></circle>
+          <circle cx="150" cy="150" r="100" stroke="url(#contactRing)" stroke-width="1"></circle>
+          <circle cx="150" cy="150" r="52" stroke="url(#contactRing)" stroke-width="1"></circle>
+          <defs>
+            <linearGradient id="contactRing" x1="0" y1="0" x2="300" y2="300">
+              <stop stop-color="#7C3AED" stop-opacity="0.5"></stop>
+              <stop offset="1" stop-color="#0891B2" stop-opacity="0.5"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div id="contact-title">
+          <p class="eyebrow mx-auto">联系方式</p>
+          <h2 class="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">保持联系</h2>
+          <p class="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
+            如果你对我的项目方向感兴趣，欢迎通过邮件联系，我会在第一时间回复。
+          </p>
+        </div>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="mt-7 inline-block text-xl font-semibold tracking-tight text-grad underline decoration-accent/30 underline-offset-8 transition-all hover:decoration-accent md:text-2xl"
+        >
+          {SITE.email}
+        </a>
+        <div class="mt-5">
+          <a
+            href={SITE.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="arrow-link inline-flex items-center gap-1 text-sm font-medium text-muted transition-colors hover:text-accent-deep"
+          >
+            GitHub 主页 <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

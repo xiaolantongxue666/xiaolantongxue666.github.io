@@ -1,0 +1,30 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** 可选的引导说明 */
+  desc?: string;
+  /** 居中排版（柔和科技风区块常用） */
+  center?: boolean;
+  /** 标题 id（供外层 section 的 aria-labelledby 引用） */
+  id?: string;
+}
+const { eyebrow, title, desc, center = false, id } = Astro.props;
+---
+
+<div class:list={['mb-10 md:mb-14', center && 'text-center']}>
+  <p class="eyebrow" class:list={[center && 'mx-auto']}>{eyebrow}</p>
+  <h2 id={id} class="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">{title}</h2>
+  {
+    desc && (
+      <p
+        class:list={[
+          'mt-3.5 max-w-2xl text-[15px] leading-relaxed text-muted',
+          center && 'mx-auto',
+        ]}
+      >
+        {desc}
+      </p>
+    )
+  }
+</div>

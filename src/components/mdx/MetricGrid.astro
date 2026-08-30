@@ -1,0 +1,20 @@
+---
+import Metric from '../Metric.astro';
+
+interface Props {
+  metrics: { value: string; label: string }[];
+  /** 列数：2 / 3 / 4 */
+  cols?: 2 | 3 | 4;
+}
+const { metrics, cols = 4 } = Astro.props;
+
+const colsClass = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-2 md:grid-cols-3',
+  4: 'grid-cols-2 md:grid-cols-4',
+}[cols];
+---
+
+<div class:list={['my-8 gap-8 glass rounded-2xl px-6 py-7 md:px-9 md:py-8', colsClass, 'grid']}>
+  {metrics.map((m) => <Metric value={m.value} label={m.label} size="lg" />)}
+</div>

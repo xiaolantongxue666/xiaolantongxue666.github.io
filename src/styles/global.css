@@ -1,0 +1,319 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+
+  /* 设计系统：柔和渐变科技风
+     冷调浅底 + 紫罗兰→靛蓝→青的单一渐变强调 + 玻璃拟态卡片 */
+  --color-paper: #f6f7fb;
+  --color-ink: #1e2235;
+  --color-muted: #575d72;
+  --color-faint: #8a90a3;
+  --color-line: #e4e7f2;
+  --color-accent: #7c3aed;
+  --color-accent-deep: #6d28d9;
+  --color-aqua: #0891b2;
+
+  --shadow-soft: 0 12px 40px -14px rgba(79, 70, 229, 0.18);
+  --shadow-card: 0 4px 24px -10px rgba(30, 34, 53, 0.12);
+  --shadow-glow: 0 10px 30px -8px rgba(124, 58, 237, 0.45);
+}
+
+:root {
+  --grad-accent: linear-gradient(120deg, #7c3aed 0%, #4f46e5 48%, #0891b2 100%);
+  --grad-accent-soft: linear-gradient(
+    120deg,
+    rgba(124, 58, 237, 0.09),
+    rgba(79, 70, 229, 0.07) 48%,
+    rgba(8, 145, 178, 0.09)
+  );
+}
+
+/* ---------- 基础 ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgba(124, 58, 237, 0.16);
+  color: var(--color-accent-deep);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- 渐变 / 玻璃 / 极光 ---------- */
+
+@layer components {
+  /* 品牌渐变（紫 → 靛 → 青） */
+  .grad-accent {
+    background-image: var(--grad-accent);
+  }
+  .grad-soft {
+    background-image: var(--grad-accent-soft);
+  }
+
+  /* 渐变文字 */
+  .text-grad {
+    background-image: var(--grad-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 玻璃卡片 */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* 极光光斑（纯 CSS 装饰层） */
+  .aurora-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+
+  /* 区块眉头：渐变圆点 + 药丸小标 */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.32rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(124, 58, 237, 0.22);
+    background: rgba(124, 58, 237, 0.05);
+    color: var(--color-accent-deep);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 9999px;
+    background-image: var(--grad-accent);
+    flex: none;
+  }
+
+  /* 链接箭头 hover 位移 */
+  .arrow-link .arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .arrow-link:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* 技术标签 */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: 9999px;
+    padding: 0.22rem 0.75rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    background: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .chip:hover {
+    border-color: rgba(124, 58, 237, 0.35);
+    color: var(--color-accent-deep);
+  }
+
+  /* 主按钮 / 次按钮 */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    padding: 0.66rem 1.45rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    transition:
+      box-shadow 0.2s ease,
+      filter 0.2s ease,
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  .btn-primary {
+    background-image: var(--grad-accent);
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 14px 36px -8px rgba(124, 58, 237, 0.55);
+  }
+  .btn-secondary {
+    border: 1px solid var(--color-line);
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--color-ink);
+  }
+  .btn-secondary:hover {
+    border-color: rgba(124, 58, 237, 0.35);
+    color: var(--color-accent-deep);
+  }
+
+  /* 侧边章节锚点圆点 */
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-faint);
+    opacity: 0.55;
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .dot:hover {
+    opacity: 1;
+  }
+  .dot.active {
+    background-image: var(--grad-accent);
+    opacity: 1;
+    transform: scale(1.45);
+  }
+}
+
+/* ---------- Case Study 正文排版（MDX 渲染容器） ---------- */
+
+.case-study {
+  counter-reset: section;
+  font-size: 1rem;
+}
+
+.case-study h2 {
+  counter-increment: section;
+  margin-top: 4.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  scroll-margin-top: 6rem;
+}
+
+.case-study h2::before {
+  content: counter(section, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  margin-right: 0.75rem;
+  vertical-align: 0.18em;
+}
+
+.case-study h3 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.85rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.case-study p {
+  margin: 1rem 0;
+  max-width: 46rem;
+  line-height: 1.95;
+  color: var(--color-muted);
+}
+
+.case-study strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.case-study ul,
+.case-study ol {
+  margin: 1rem 0;
+  padding-left: 1.4rem;
+  max-width: 44rem;
+  color: var(--color-muted);
+  line-height: 1.9;
+}
+
+.case-study ul {
+  list-style: disc;
+}
+
+.case-study ol {
+  list-style: decimal;
+}
+
+.case-study li {
+  margin: 0.35rem 0;
+}
+
+.case-study li::marker {
+  color: var(--color-faint);
+}
+
+.case-study a {
+  color: var(--color-accent-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+
+.case-study a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.case-study code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgba(124, 58, 237, 0.07);
+  border-radius: 6px;
+  padding: 0.1em 0.45em;
+  color: var(--color-accent-deep);
+}
+
+/* 首个 h2 不需要大上边距 */
+.case-study h2:first-child {
+  margin-top: 0;
+}

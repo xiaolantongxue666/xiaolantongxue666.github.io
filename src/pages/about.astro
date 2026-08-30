@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const description =
+  '关于兰永重：长江大学硕士在读，技术方向集中在 Python、机器学习与 AI 大模型应用，关注从数据到业务结果的完整工程链路。';
+---
+
+<BaseLayout title="关于" description={description} path="/about">
+  <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+    <p class="eyebrow">个人简介</p>
+    <h1 class="mt-3 text-3xl font-bold tracking-tight text-ink md:text-4xl">
+      关于我
+    </h1>
+
+    <div class="mt-10 max-w-2xl space-y-6 text-[15px] leading-[2] text-muted md:text-base">
+      <p>
+        我是兰永重，目前在长江大学攻读硕士学位。技术方向主要集中在
+        Python、机器学习以及 AI 大模型应用。
+      </p>
+      <p>
+        我的实践经历最初从 Python 数据采集与数据分析开始，随后逐步参与机器学习和深度学习项目，包括雷达目标识别、多模态干扰识别以及模型部署。目前进一步关注
+        RAG、知识图谱和 GraphRAG 等大模型应用技术。
+      </p>
+      <p>
+        相比只关注模型调用，我更希望理解一个 AI
+        应用从数据进入系统，到解析、检索、模型推理，再到最终业务结果的完整工程链路。
+      </p>
+    </div>
+
+    <!-- 能力路径 -->
+    <div class="mt-16 max-w-2xl">
+      <h2 class="text-sm font-semibold tracking-widest text-faint uppercase">技术路径</h2>
+      <ol class="mt-6 space-y-0" role="list">
+        {
+          [
+            'Python / Data',
+            'Machine Learning / Deep Learning',
+            'Model Engineering & Deployment',
+            'RAG / Knowledge Graph',
+            'AI Application Development',
+          ].map((step, i, arr) => (
+            <li class="flex flex-col">
+              <span class:list={['font-mono text-[15px]', i === arr.length - 1 ? 'font-semibold text-accent-deep' : 'text-ink']}>
+                {step}
+              </span>
+              {i < arr.length - 1 && (
+                <svg width="14" height="20" viewBox="0 0 14 20" fill="none" aria-hidden="true" class="my-1 ml-1 text-line">
+                  <path d="M7 1v16M2 12.5L7 18l5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="mt-16 border-t border-line pt-8">
+      <h2 class="text-sm font-semibold tracking-widest text-faint uppercase">联系方式</h2>
+      <p class="mt-4 text-[15px] text-muted">
+        欢迎通过邮件联系：
+        <a
+          href={`mailto:${SITE.email}`}
+          class="font-medium text-accent-deep underline decoration-accent/30 underline-offset-4 hover:decoration-accent"
+        >
+          {SITE.email}
+        </a>
+      </p>
+      <p class="mt-2 text-[15px] text-muted">
+        GitHub：
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-accent-deep underline decoration-accent/30 underline-offset-4 hover:decoration-accent"
+        >
+          xiaolantongxue666
+        </a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>

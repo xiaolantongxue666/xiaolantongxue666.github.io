@@ -1,0 +1,30 @@
+---
+interface Props {
+  /** 定位标题 */
+  title: string;
+  /** 一行小字，如 RAG · GraphRAG · Knowledge Graph */
+  subtitle: string;
+  /** 说明文案 */
+  desc: string;
+  /** 技术标签（4–8 个为宜） */
+  tags: string[];
+}
+const { title, subtitle, desc, tags } = Astro.props;
+---
+
+<article
+  class="glass group flex h-full flex-col rounded-3xl p-7 transition-all hover:-translate-y-0.5 hover:shadow-soft md:p-9"
+>
+  <h3 class="text-lg font-semibold tracking-tight text-ink">{title}</h3>
+  <p class="mt-2 font-mono text-xs font-medium tracking-wide text-grad">{subtitle}</p>
+  <p class="mt-4 flex-1 text-[15px] leading-[1.9] text-muted">{desc}</p>
+  <ul class="mt-6 flex flex-wrap gap-2" role="list" aria-label={`${title} 相关技术`}>
+    {
+      tags.map((tag) => (
+        <li class="chip font-mono text-[0.72rem]">
+          {tag}
+        </li>
+      ))
+    }
+  </ul>
+</article>

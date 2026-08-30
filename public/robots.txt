@@ -1,0 +1,5 @@
+# Sitemap 地址与 astro.config.mjs 的 site 保持一致
+User-agent: *
+Allow: /
+
+Sitemap: https://xiaolantongxue666.github.io/sitemap-index.xml

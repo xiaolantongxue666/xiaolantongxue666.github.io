@@ -1,0 +1,91 @@
+---
+slug: low-altitude-target-recognition
+order: 2
+title: 复杂低空场景目标识别系统
+titleEn: Low-Altitude Target Recognition System
+summary: 围绕低空监视雷达中的“低慢小”目标识别场景，完成原始回波、点迹和航迹等多类数据的处理与融合建模，并搭建覆盖数据处理、模型训练、预测推理和部署优化的模块化流程。
+type: 研究生项目经历
+focus: Feature Engineering / Model Engineering / Deployment
+tags:
+  - Python
+  - PyTorch
+  - KAN
+  - MLP
+  - Feature Engineering
+  - ONNX
+  - Int8 Quantization
+  - RK3588
+  - Jetson
+metrics:
+  - value: 40+
+    label: 维特征
+  - value: 98.99%
+    label: 验证准确率
+  - value: 'ONNX + Int8'
+    label: 模型部署
+---
+
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import PipelineFlow from '../../components/mdx/PipelineFlow.astro';
+import Callout from '../../components/mdx/Callout.astro';
+
+## 问题：低空监视中的“低慢小”目标
+
+围绕低空监视雷达中的“低慢小”目标识别场景，完成原始回波、点迹和航迹等多类数据的处理与融合建模，并搭建覆盖数据处理、模型训练、预测推理和部署优化的模块化流程。
+
+“低慢小”目标（低空、慢速、小尺寸）雷达回波微弱、特征不明显，是低空监视场景中公认的识别难点。项目输入是雷达系统的多类中间数据，输出是目标类别判断，并在嵌入式设备上满足推理开销约束。
+
+## 模块化流程
+
+<PipelineFlow
+  steps={[
+    '数据处理',
+    '特征工程',
+    '模型训练',
+    '预测推理',
+    '部署优化',
+  ]}
+  notes={[
+    '原始回波、点迹、航迹多类数据的结构化解析与对齐',
+    '结合 MTD、FFT、周期聚合等方法提取 40+ 维时频 / 几何特征',
+    'KAN + MLP 模型训练与调优',
+    '单周期预测与航迹级综合识别',
+    'ONNX 转换 + Int8 动态量化，面向嵌入式平台',
+  ]}
+/>
+
+## 特征工程（Feature Engineering）
+
+对数据进行结构化解析，结合 MTD、FFT、周期聚合等方法提取 40+ 维时频 / 几何特征。
+
+雷达原始数据无法直接进入模型：需要在时域 / 频域分别提取特征（MTD 动目标检测、FFT 频谱特征），再结合多周期聚合得到稳定的目标运动模式描述。40+ 维特征覆盖了目标的速度、尺寸、运动周期与时频结构等多个视角，是最终识别精度的直接来源。
+
+## 模型（Model）
+
+使用 KAN + MLP 架构，并结合 BatchNorm、Dropout、Adam、ReduceLROnPlateau 改善模型训练和泛化效果。
+
+KAN（Kolmogorov–Arnold Network）以可学习激活函数替代传统线性层 + 固定激活的组合，与 MLP 混合使用可以兼顾表达能力和训练稳定性。训练侧通过 BatchNorm 稳定分布、Dropout 抑制过拟合、ReduceLROnPlateau 在验证集停滞时自动降低学习率，构成一套常规但有效的调优组合。
+
+## 模型部署（Deployment）
+
+完成 ONNX 转换与 Int8 动态量化，支持 RK3588、Jetson Orin Nano Super 等嵌入式平台运行。
+
+嵌入式设备的算力和内存预算远低于训练环境，直接部署 PyTorch 模型不可行。通过 ONNX Runtime 完成跨平台推理转换，再用 Int8 动态量化压缩模型体积与计算量，在精度损失可控的前提下满足嵌入式平台的运行要求。
+
+## 项目成果
+
+<MetricGrid
+  metrics={[
+    { value: '98.99%', label: '验证准确率' },
+    { value: '98.92%', label: '单周期测试准确率' },
+    { value: '97.76%', label: '航迹级综合识别率' },
+  ]}
+/>
+
+验证集准确率 98.99%，单周期测试准确率 98.92%，航迹级综合识别率 97.76%。航迹级指标低于单周期指标，反映的是多周期结果融合时的误差累积，也是后续可以继续优化的方向。
+
+## 经验与反思
+
+- **特征工程仍然是结构化信号建模的主力。** 在这类传统信号 + 表格特征的场景里，好的特征比更复杂的模型结构带来的收益更直接。
+- **部署约束应该提前进入设计。** 模型选型时就把嵌入式运行开销纳入考量，ONNX + Int8 量化才能顺利落地。
+- **模块化流程是可维护性的关键。** 数据处理、训练、推理、部署各自解耦后，单点优化（如特征调整）不会牵动整个链路。

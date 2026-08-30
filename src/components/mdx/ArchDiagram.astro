@@ -1,0 +1,247 @@
+---
+/**
+ * GraphRAG 双路检索架构图：纯 SVG 绘制，连续正交连线 + 箭头 + 双路配色标注。
+ * 桌面端为横向布局（hidden md:block），移动端自动切换纵向布局，两套 viewBox 独立坐标。
+ * 技术逻辑：User Question → Query Input → 文本检索 / 图谱检索 双路 →
+ * Elasticsearch / Neo4j → Text Context / Graph Context → LLM → Answer。
+ */
+
+const GRAY = '#a3a8bc';
+const INDIGO = '#6366f1';
+const CYAN = '#0891b2';
+
+const nodeSkin = {
+  default: { fill: 'rgba(255,255,255,0.92)', stroke: '#d9ddf0', color: '#1e2235' },
+  text: { fill: '#eef0ff', stroke: '#b9c0fb', color: '#4338ca' },
+  graph: { fill: '#e9f9fd', stroke: '#8fe3f5', color: '#0e7490' },
+  final: { fill: 'url(#__grad__)', stroke: 'none', color: '#ffffff' },
+};
+
+/** 桌面横向布局（viewBox 920 × 650） */
+const hNodes = [
+  { x: 360, y: 20, w: 200, label: 'User Question', kind: 'default' },
+  { x: 360, y: 120, w: 200, label: 'Query Input', kind: 'default' },
+  { x: 125, y: 270, w: 210, label: 'Text Retrieval', kind: 'text' },
+  { x: 125, y: 350, w: 210, label: 'Elasticsearch', kind: 'text' },
+  { x: 125, y: 430, w: 210, label: 'Text Context', kind: 'text' },
+  { x: 585, y: 270, w: 210, label: 'Graph Retrieval', kind: 'graph' },
+  { x: 585, y: 350, w: 210, label: 'Neo4j', kind: 'graph' },
+  { x: 585, y: 430, w: 210, label: 'Graph Context', kind: 'graph' },
+  { x: 360, y: 520, w: 200, label: 'LLM', kind: 'final' },
+  { x: 360, y: 590, w: 200, label: 'Answer', kind: 'final' },
+];
+const hLines = [
+  { d: 'M460 64 V120', c: GRAY, m: 'gray' },
+  { d: 'M460 164 V210 H230 V270', c: INDIGO, m: 'indigo' },
+  { d: 'M460 164 V210 H690 V270', c: CYAN, m: 'cyan' },
+  { d: 'M230 314 V350', c: INDIGO, m: 'indigo' },
+  { d: 'M230 394 V430', c: INDIGO, m: 'indigo' },
+  { d: 'M690 314 V350', c: CYAN, m: 'cyan' },
+  { d: 'M690 394 V430', c: CYAN, m: 'cyan' },
+  { d: 'M230 474 V500 H420 V520', c: INDIGO, m: 'indigo' },
+  { d: 'M690 474 V500 H500 V520', c: CYAN, m: 'cyan' },
+  { d: 'M460 564 V590', c: GRAY, m: 'gray' },
+];
+const hLabels = [
+  { x: 345, y: 200, text: '文本检索路径', c: '#4f46e5' },
+  { x: 575, y: 200, text: '图谱检索路径', c: '#0e7490' },
+];
+
+/** 移动纵向布局（viewBox 440 × 680） */
+const vNodes = [
+  { x: 120, y: 12, w: 200, label: 'User Question', kind: 'default' },
+  { x: 120, y: 92, w: 200, label: 'Query Input', kind: 'default' },
+  { x: 25, y: 250, w: 180, label: 'Text Retrieval', kind: 'text' },
+  { x: 25, y: 330, w: 180, label: 'Elasticsearch', kind: 'text' },
+  { x: 25, y: 410, w: 180, label: 'Text Context', kind: 'text' },
+  { x: 235, y: 250, w: 180, label: 'Graph Retrieval', kind: 'graph' },
+  { x: 235, y: 330, w: 180, label: 'Neo4j', kind: 'graph' },
+  { x: 235, y: 410, w: 180, label: 'Graph Context', kind: 'graph' },
+  { x: 120, y: 540, w: 200, label: 'LLM', kind: 'final' },
+  { x: 120, y: 610, w: 200, label: 'Answer', kind: 'final' },
+];
+const vLines = [
+  { d: 'M220 56 V92', c: GRAY, m: 'gray' },
+  { d: 'M220 136 V190 H115 V250', c: INDIGO, m: 'indigo' },
+  { d: 'M220 136 V190 H325 V250', c: CYAN, m: 'cyan' },
+  { d: 'M115 294 V330', c: INDIGO, m: 'indigo' },
+  { d: 'M115 374 V410', c: INDIGO, m: 'indigo' },
+  { d: 'M325 294 V330', c: CYAN, m: 'cyan' },
+  { d: 'M325 374 V410', c: CYAN, m: 'cyan' },
+  { d: 'M115 454 V500 H180 V540', c: INDIGO, m: 'indigo' },
+  { d: 'M325 454 V500 H260 V540', c: CYAN, m: 'cyan' },
+  { d: 'M220 584 V610', c: GRAY, m: 'gray' },
+];
+const vLabels = [
+  { x: 168, y: 180, text: '文本检索', c: '#4f46e5' },
+  { x: 272, y: 180, text: '图谱检索', c: '#0e7490' },
+];
+---
+
+<div class="glass my-9 overflow-hidden rounded-3xl px-3 py-8 md:px-8 md:py-10">
+  <!-- 桌面：横向架构图 -->
+  <div class="hidden md:block">
+    <svg
+      viewBox="0 0 920 650"
+      class="mx-auto w-full max-w-[860px]"
+      role="img"
+      aria-label="GraphRAG 双路检索架构图：用户问题经查询输入后分为文本检索与图谱检索两路，分别经过 Elasticsearch 与 Neo4j 生成文本与图谱上下文，融合后交由大语言模型生成回答"
+    >
+      <defs>
+        <linearGradient id="ad-grad-h" x1="0" y1="0" x2="1" y2="1">
+          <stop stop-color="#7c3aed"></stop>
+          <stop offset="1" stop-color="#0891b2"></stop>
+        </linearGradient>
+        {
+          [['gray', GRAY], ['indigo', INDIGO], ['cyan', CYAN]].map(([name, color]) => (
+            <marker
+              id={`ad-arr-h-${name}`}
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="6.5"
+              markerHeight="6.5"
+              orient="auto-start-reverse"
+            >
+              <path d="M0 0 L10 5 L0 10 z" fill={color} />
+            </marker>
+          ))
+        }
+      </defs>
+
+      {
+        hLines.map((l) => (
+          <path
+            d={l.d}
+            fill="none"
+            stroke={l.c}
+            stroke-width="1.8"
+            marker-end={`url(#ad-arr-h-${l.m})`}
+          />
+        ))
+      }
+      {
+        hLabels.map((l) => (
+          <text x={l.x} y={l.y} text-anchor="middle" font-size="12.5" font-weight="600" fill={l.c}>
+            {l.text}
+          </text>
+        ))
+      }
+      {
+        hNodes.map((n) => {
+          const s = nodeSkin[n.kind];
+          return (
+            <g>
+              <rect
+                x={n.x}
+                y={n.y}
+                width={n.w}
+                height="44"
+                rx="11"
+                fill={s.fill === 'url(#__grad__)' ? 'url(#ad-grad-h)' : s.fill}
+                stroke={s.stroke}
+                stroke-width="1.2"
+              />
+              <text
+                x={n.x + n.w / 2}
+                y={n.y + 22}
+                text-anchor="middle"
+                dominant-baseline="central"
+                font-size="14.5"
+                font-weight="600"
+                fill={s.color}
+              >
+                {n.label}
+              </text>
+            </g>
+          );
+        })
+      }
+    </svg>
+  </div>
+
+  <!-- 移动：纵向架构图 -->
+  <div class="md:hidden">
+    <svg
+      viewBox="0 0 440 680"
+      class="mx-auto w-full"
+      role="img"
+      aria-label="GraphRAG 双路检索架构图（纵向）：用户问题经查询输入后分为文本检索与图谱检索两路，分别经过 Elasticsearch 与 Neo4j 生成上下文，融合后交由大语言模型生成回答"
+    >
+      <defs>
+        <linearGradient id="ad-grad-v" x1="0" y1="0" x2="1" y2="1">
+          <stop stop-color="#7c3aed"></stop>
+          <stop offset="1" stop-color="#0891b2"></stop>
+        </linearGradient>
+        {
+          [['gray', GRAY], ['indigo', INDIGO], ['cyan', CYAN]].map(([name, color]) => (
+            <marker
+              id={`ad-arr-v-${name}`}
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="6.5"
+              markerHeight="6.5"
+              orient="auto-start-reverse"
+            >
+              <path d="M0 0 L10 5 L0 10 z" fill={color} />
+            </marker>
+          ))
+        }
+      </defs>
+
+      {
+        vLines.map((l) => (
+          <path
+            d={l.d}
+            fill="none"
+            stroke={l.c}
+            stroke-width="1.8"
+            marker-end={`url(#ad-arr-v-${l.m})`}
+          />
+        ))
+      }
+      {
+        vLabels.map((l) => (
+          <text x={l.x} y={l.y} text-anchor="middle" font-size="11.5" font-weight="600" fill={l.c}>
+            {l.text}
+          </text>
+        ))
+      }
+      {
+        vNodes.map((n) => {
+          const s = nodeSkin[n.kind];
+          return (
+            <g>
+              <rect
+                x={n.x}
+                y={n.y}
+                width={n.w}
+                height="44"
+                rx="11"
+                fill={s.fill === 'url(#__grad__)' ? 'url(#ad-grad-v)' : s.fill}
+                stroke={s.stroke}
+                stroke-width="1.2"
+              />
+              <text
+                x={n.x + n.w / 2}
+                y={n.y + 22}
+                text-anchor="middle"
+                dominant-baseline="central"
+                font-size="13"
+                font-weight="600"
+                fill={s.color}
+              >
+                {n.label}
+              </text>
+            </g>
+          );
+        })
+      }
+    </svg>
+  </div>
+
+  <p class="sr-only">
+    架构流程：用户问题经过查询输入后分为两路——文本检索（Elasticsearch，产出文本上下文）与图谱检索（Neo4j，产出图谱上下文）；两路上下文融合后交给大语言模型生成最终回答。
+  </p>
+</div>

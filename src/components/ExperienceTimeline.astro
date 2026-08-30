@@ -1,0 +1,44 @@
+---
+export interface TimelineItem {
+  period: string;
+  company: string;
+  role: string;
+  desc: string;
+  tech: string[];
+}
+
+interface Props {
+  items: TimelineItem[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="relative space-y-12 border-l border-line pl-8 md:pl-10" role="list">
+  {
+    items.map((item, i) => (
+      <li class="relative">
+        <span
+          class:list={[
+            'absolute top-1.5 -left-[37px] block size-3 rounded-full border-2 border-paper md:-left-[45px]',
+            i === 0 ? 'grad-accent' : 'bg-faint/60',
+          ]}
+          aria-hidden="true"
+        />
+        <div class="glass rounded-3xl p-6 md:p-7">
+          <p class="font-mono text-xs tracking-wide text-faint">{item.period}</p>
+          <h3 class="mt-2 text-base font-semibold tracking-tight text-ink md:text-lg">
+            {item.company}
+            <span class="mx-2 font-normal text-line" aria-hidden="true">·</span>
+            <span class="font-medium text-muted">{item.role}</span>
+          </h3>
+          <p class="mt-3 max-w-2xl text-[15px] leading-[1.9] text-muted">{item.desc}</p>
+          <ul class="mt-4 flex flex-wrap gap-2" role="list" aria-label="使用技术">
+            {item.tech.map((t) => (
+              <li class="chip font-mono text-[0.72rem]">{t}</li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    ))
+  }
+</ol>
