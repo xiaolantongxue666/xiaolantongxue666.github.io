@@ -20,6 +20,7 @@ TypeScript（strict）
 Tailwind CSS 4（@tailwindcss/vite）
 MDX Content Collections（项目内容与代码分离）
 @astrojs/sitemap
+@astrojs/rss（博客订阅源 /rss.xml）
 ```
 
 ## 本地运行
@@ -68,14 +69,22 @@ portfolio/
 │   │   ├── legal-knowledge-graphrag.mdx
 │   │   ├── low-altitude-target-recognition.mdx
 │   │   └── multimodal-interference-recognition.mdx
+│   ├── content/blog/                # 博客文章（Markdown，文件名即 URL slug）
+│   │   ├── hello-blog.md
+│   │   └── how-this-site-is-built.md
 │   ├── layouts/
 │   │   ├── BaseLayout.astro         # SEO / OG / canonical / 无障碍跳转
 │   │   └── ProjectLayout.astro      # 项目详情页外壳（Hero 元信息 + 上一篇/下一篇）
-│   ├── lib/projects.ts              # 项目集合读取与排序
+│   ├── lib/
+│   │   ├── projects.ts              # 项目集合读取与排序
+│   │   └── blog.ts                  # 博客文章读取与排序（draft 构建时排除）
 │   ├── pages/
 │   │   ├── index.astro              # 首页
 │   │   ├── projects/index.astro     # 项目列表页
 │   │   ├── projects/[slug].astro    # 项目详情路由
+│   │   ├── blog/index.astro         # 博客列表页（按年份分组）
+│   │   ├── blog/[slug].astro        # 文章详情路由
+│   │   ├── rss.xml.js               # RSS 订阅源（/rss.xml）
 │   │   ├── about.astro
 │   │   └── 404.astro
 │   ├── styles/global.css            # 设计系统（颜色 / 字体 / 排版 / 案例正文样式）
@@ -110,6 +119,25 @@ cover: /images/projects/my-project/cover.png   # 没有真实截图就不要填
 ```
 
 无需注册路由，`[slug].astro` 会自动生成详情页并加入列表页与上一篇/下一篇导航。
+
+## 写博客
+
+在 `src/content/blog/` 下新建 `.md` 文件（文件名即 URL slug，如 `my-note.md` → `/blog/my-note`），
+frontmatter 参照现有文章：
+
+```yaml
+---
+title: 文章标题
+description: 一句话描述（列表页 / RSS / SEO 使用）
+pubDate: 2026-08-30
+tags: [随笔]          # 可选
+draft: true           # 可选，草稿构建时排除，dev 模式仍可预览
+---
+正文使用 Markdown，样式由 global.css 的 .blog-post 提供（含代码块 / 引用块 / 表格）。
+```
+
+发布即 git push——GitHub Actions 会自动构建上线，无需改任何路由代码。
+列表页按年份分组，详情页自带「较新一篇 / 较早一篇」导航，`/rss.xml` 自动收录。
 
 ## 修改个人信息
 
@@ -179,7 +207,7 @@ Case Study 与实习经历直接了解候选人。两份 PDF 简历仅本地保�
 | 多模态项目截图 | `public/images/projects/interference/` | 无素材，同上 |
 | GraphRAG 表格解析前后对比图 | `legal-knowledge-graphrag.mdx` 的 Document Parsing 节 | 无素材，未放占位假图 |
 | Demo / Repo 链接 | 项目 frontmatter | 未提供，未展示 |
-| `/blog` | 未来新增 `src/pages/blog/` | 信息架构已预留 |
+| `/blog` | `src/content/blog/` | 已上线：列表页（按年份分组）/ 文章详情页 / `/rss.xml`，导航与页脚已挂链接 |
 
 ## 数据一致性备忘（改动前必读）
 

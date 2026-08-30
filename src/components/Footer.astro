@@ -5,7 +5,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-line">
-  <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-12 md:px-8">
+  <div class="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
     <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
       <div>
         <p class="text-[15px] font-semibold tracking-tight text-ink">{SITE.name}</p>
@@ -14,6 +14,7 @@ const year = new Date().getFullYear();
 
       <nav aria-label="页脚导航" class="flex flex-col gap-2.5 text-sm md:items-end">
         <a href="/projects" class="text-muted transition-colors hover:text-ink">项目</a>
+        <a href="/blog" class="text-muted transition-colors hover:text-ink">博客</a>
         <a href="/about" class="text-muted transition-colors hover:text-ink">关于</a>
         <a
           href={SITE.github}

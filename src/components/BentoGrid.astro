@@ -1,86 +1,72 @@
 ---
 /**
- * Bento 数据格：Hero 下方的核心事实网格。
- * 全部使用已确认的真实指标；大格指向 GraphRAG 主项目。
+ * Bento 成果速览：深色项目区开头，快速扫成果（嵌套使用，不自带容器）。
+ * GraphRAG 主项目占最大块并放真实截图；全部使用已确认指标。
  */
-const cells = [
-  {
-    size: 'wide',
-    value: '92.71%',
-    label: '多模态干扰识别验证准确率',
-    sub: 'Macro F1 0.8398 · CNN + Transformer',
-    href: '/projects/multimodal-interference-recognition',
-  },
-  {
-    value: '98.99%',
-    label: '低空目标识别验证准确率',
-    sub: '40+ 维时频 / 几何特征',
-    href: '/projects/low-altitude-target-recognition',
-  },
-  {
-    value: '7–8 min',
-    label: '约 10 页文档从入库到可问答',
-    sub: '解析 · 抽取 · 图谱 · 向量化',
-    href: '/projects/legal-knowledge-graphrag',
-  },
-];
+const { class: className = '' } = Astro.props;
 ---
 
-<div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 pb-16 md:px-8 md:pb-20">
-  <h2 class="sr-only">核心数据</h2>
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2">
-    <!-- 主格：GraphRAG 项目 -->
-    <a
-      href="/projects/legal-knowledge-graphrag"
-      class="grad-accent group relative flex flex-col justify-between overflow-hidden rounded-3xl p-7 text-white shadow-glow transition-transform hover:-translate-y-0.5 md:col-span-2 md:row-span-2 md:p-9"
-    >
-      <!-- 装饰同心圆 -->
-      <svg
-        class="pointer-events-none absolute -right-14 -bottom-16 opacity-25"
-        width="240"
-        height="240"
-        viewBox="0 0 240 240"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle cx="120" cy="120" r="118" stroke="white" stroke-width="1"></circle>
-        <circle cx="120" cy="120" r="86" stroke="white" stroke-width="1"></circle>
-        <circle cx="120" cy="120" r="54" stroke="white" stroke-width="1"></circle>
-        <circle cx="120" cy="120" r="22" fill="white"></circle>
-      </svg>
+<div class:list={['grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2', className]} aria-label="核心项目成果">
+  <!-- 主格：GraphRAG 真实截图 -->
+  <a
+    href="/projects/legal-knowledge-graphrag"
+    class="img-hover group relative flex flex-col overflow-hidden rounded-2xl border border-[color:var(--color-night-line)] bg-white/[0.04] transition-colors hover:border-white/25 lg:col-span-2 lg:row-span-2"
+  >
+    <span class="absolute top-4 left-4 z-10 rounded-md border border-[color:var(--color-night-line)] bg-[#11161d]/85 px-2.5 py-1 font-mono text-[10px] tracking-[0.18em] text-night-muted uppercase">
+      Real Project Output
+    </span>
+    <div class="min-h-0 flex-1 overflow-hidden">
+      <img
+        src="/images/projects/graphrag/knowledge-graph.png"
+        alt="法律法规领域知识图谱运行结果可视化"
+        width="1920"
+        height="945"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover object-top"
+      />
+    </div>
+    <div class="p-6">
+      <p class="font-mono text-[11px] tracking-[0.18em] text-night-muted uppercase">01 · GraphRAG</p>
+      <p class="mt-2 text-lg font-semibold text-night-text">
+        法律法规知识图谱与问答系统
+        <span class="ml-2 inline-block text-sm text-[color:var(--night-link)]">
+          查看案例 <span class="arrow" aria-hidden="true">→</span>
+        </span>
+      </p>
+      <p class="mt-1 text-sm text-night-muted">文档解析 · 知识图谱 · 双路检索问答</p>
+    </div>
+  </a>
 
-      <div>
-        <p class="font-mono text-xs tracking-widest text-white/80">01 · GRAPHRAG</p>
-        <p class="mt-4 text-5xl font-bold tracking-tight tabular-nums md:text-6xl">5000+</p>
-        <p class="mt-2 text-lg font-medium text-white/95">知识图谱节点</p>
-        <p class="mt-1 text-sm leading-relaxed text-white/75">
-          法律法规智能知识图谱与问答系统 · 10000+ 关系 · 检索召回率 90% → 95%
-        </p>
-      </div>
-      <span class="arrow-link mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-white">
-        查看 Case Study
-        <span class="arrow" aria-hidden="true">→</span>
-      </span>
-    </a>
+  <a
+    href="/projects/legal-knowledge-graphrag"
+    class="flex flex-col justify-center rounded-2xl border border-[color:var(--color-night-line)] bg-white/[0.04] p-6 transition-colors hover:border-white/25"
+  >
+    <p class="text-2xl font-semibold tracking-tight text-night-text tabular-nums">5000+</p>
+    <p class="mt-1 text-xs leading-relaxed text-night-muted">Knowledge Graph Nodes</p>
+  </a>
 
-    {
-      cells.map((cell) => (
-        <a
-          href={cell.href}
-          class:list={[
-            'glass group flex flex-col justify-between rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:shadow-soft',
-            'size' in cell && cell.size === 'wide' ? 'sm:col-span-2' : '',
-          ]}
-        >
-          <div>
-            <p class="text-3xl font-bold tracking-tight text-ink transition-colors group-hover:text-accent-deep">
-              {cell.value}
-            </p>
-            <p class="mt-2 text-sm font-medium leading-relaxed text-ink/80">{cell.label}</p>
-          </div>
-          <p class="mt-3 font-mono text-[11px] leading-relaxed text-faint">{cell.sub}</p>
-        </a>
-      ))
-    }
-  </div>
+  <a
+    href="/projects/legal-knowledge-graphrag"
+    class="flex flex-col justify-center rounded-2xl border border-[color:var(--color-night-line)] bg-white/[0.04] p-6 transition-colors hover:border-white/25"
+  >
+    <p class="text-2xl font-semibold tracking-tight text-night-text tabular-nums">90 → 95%</p>
+    <p class="mt-1 text-xs leading-relaxed text-night-muted">Retrieval Recall</p>
+  </a>
+
+  <a
+    href="/projects/low-altitude-target-recognition"
+    class="flex flex-col justify-center rounded-2xl border border-[color:var(--color-night-line)] bg-white/[0.04] p-6 transition-colors hover:border-white/25"
+  >
+    <p class="text-2xl font-semibold tracking-tight text-night-text tabular-nums">98.99%</p>
+    <p class="mt-1 text-xs leading-relaxed text-night-muted">Radar Validation Accuracy</p>
+  </a>
+
+  <a
+    href="/projects/multimodal-interference-recognition"
+    class="flex flex-col justify-center rounded-2xl border border-[color:var(--color-night-line)] bg-white/[0.04] p-6 transition-colors hover:border-white/25"
+  >
+    <p class="text-2xl font-semibold tracking-tight text-night-text tabular-nums">92.71% / 0.8398</p>
+    <p class="mt-1 text-xs leading-relaxed text-night-muted">Multimodal Recognition</p>
+  </a>
 </div>

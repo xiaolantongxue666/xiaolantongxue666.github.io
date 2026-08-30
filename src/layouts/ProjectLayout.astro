@@ -36,47 +36,43 @@ const meta = [
 ---
 
 <BaseLayout title={title} description={summary} ogType="article">
-  <article class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 pt-12 pb-20 md:px-8 md:pt-16">
+  <article class="mx-auto max-w-[1200px] px-5 pt-12 pb-20 md:px-8 md:pt-16">
     <!-- Project Hero -->
     <header>
       <a
         href="/projects"
-        class="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-3.5 py-1.5 text-sm text-muted transition-all hover:border-accent/40 hover:text-accent-deep"
+        class="inline-flex items-center gap-1.5 rounded-lg border border-line px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-faint hover:text-ink"
       >
         <span aria-hidden="true">←</span> 所有项目
       </a>
 
-      <div class="glass mt-6 rounded-3xl p-7 md:p-12">
-        <p class="font-mono text-sm font-semibold text-grad" aria-hidden="true">
-          {String(project.data.order).padStart(2, '0')}
-        </p>
-        <h1 class="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-[2.5rem] md:leading-tight">
-          {title}
-        </h1>
-        <p class="mt-3 font-mono text-sm tracking-wide text-faint md:text-[15px]">{titleEn}</p>
-        <p class="mt-5 max-w-2xl text-base leading-[1.9] text-muted">{summary}</p>
+      <p class="sec-num mt-10">{String(project.data.order).padStart(2, '0')} — CASE STUDY</p>
+      <h1 class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-[2.5rem] md:leading-tight">
+        {title}
+      </h1>
+      <p class="mt-3 font-mono text-sm tracking-wide text-faint md:text-[15px]">{titleEn}</p>
+      <p class="mt-6 max-w-2xl text-base leading-[1.9] text-muted">{summary}</p>
 
-        <dl class="mt-9 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-7 md:grid-cols-4">
-          {
-            meta.map((m) => (
-              <div>
-                <dt class="text-xs font-medium tracking-widest text-faint uppercase">{m.label}</dt>
-                <dd class="mt-2 text-sm leading-relaxed font-medium text-ink">{m.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-
+      <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-line pt-8 md:grid-cols-4">
         {
-          metrics.length > 0 && (
-            <div class="mt-8 grid grid-cols-2 gap-6 rounded-2xl grad-soft px-7 py-7 md:grid-cols-3 md:px-9">
-              {metrics.map((m) => (
-                <Metric value={m.value} label={m.label} size="lg" />
-              ))}
+          meta.map((m) => (
+            <div>
+              <dt class="text-xs font-medium tracking-widest text-faint uppercase">{m.label}</dt>
+              <dd class="mt-2 text-sm leading-relaxed font-medium text-ink">{m.value}</dd>
             </div>
-          )
+          ))
         }
-      </div>
+      </dl>
+
+      {
+        metrics.length > 0 && (
+          <div class="mt-8 grid grid-cols-2 gap-6 border-y border-line py-8 md:grid-cols-3">
+            {metrics.map((m) => (
+              <Metric value={m.value} label={m.label} size="lg" />
+            ))}
+          </div>
+        )
+      }
     </header>
 
     <!-- MDX 正文 -->
@@ -87,7 +83,7 @@ const meta = [
     <!-- 技术栈 -->
     {
       tags.length > 0 && (
-        <section class="glass mt-16 rounded-3xl p-8" aria-label="技术栈">
+        <section class="mt-16 border-t border-line pt-8" aria-label="技术栈">
           <h2 class="text-xs font-semibold tracking-widest text-faint uppercase">技术栈</h2>
           <ul class="mt-4 flex flex-wrap gap-2" role="list">
             {tags.map((tag) => (
@@ -107,7 +103,7 @@ const meta = [
         prev ? (
           <a href={`/projects/${prev.data.slug}`} class="group text-sm">
             <span class="text-faint">← 上一篇</span>
-            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent-deep">
+            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent">
               {prev.data.title}
             </span>
           </a>
@@ -119,7 +115,7 @@ const meta = [
         next && (
           <a href={`/projects/${next.data.slug}`} class="group text-sm sm:text-right">
             <span class="text-faint">下一篇 →</span>
-            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent-deep">
+            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent">
               {next.data.title}
             </span>
           </a>

@@ -7,14 +7,14 @@
  */
 
 const GRAY = '#a3a8bc';
-const INDIGO = '#6366f1';
+const INDIGO = '#2563eb';
 const CYAN = '#0891b2';
 
-const nodeSkin = {
+const nodeSkin: Record<string, { fill: string; stroke: string; color: string }> = {
   default: { fill: 'rgba(255,255,255,0.92)', stroke: '#d9ddf0', color: '#1e2235' },
-  text: { fill: '#eef0ff', stroke: '#b9c0fb', color: '#4338ca' },
-  graph: { fill: '#e9f9fd', stroke: '#8fe3f5', color: '#0e7490' },
-  final: { fill: 'url(#__grad__)', stroke: 'none', color: '#ffffff' },
+  text: { fill: '#eff6ff', stroke: '#bfdbfe', color: '#1d4ed8' },
+  graph: { fill: '#ecfeff', stroke: '#a5f3fc', color: '#0e7490' },
+  final: { fill: '#121417', stroke: 'none', color: '#ffffff' },
 };
 
 /** 桌面横向布局（viewBox 920 × 650） */
@@ -78,7 +78,7 @@ const vLabels = [
 ];
 ---
 
-<div class="glass my-9 overflow-hidden rounded-3xl px-3 py-8 md:px-8 md:py-10">
+<div class="my-9 rounded-xl border border-line bg-white px-3 py-8 md:px-8 md:py-10">
   <!-- 桌面：横向架构图 -->
   <div class="hidden md:block">
     <svg
@@ -138,7 +138,7 @@ const vLabels = [
                 width={n.w}
                 height="44"
                 rx="11"
-                fill={s.fill === 'url(#__grad__)' ? 'url(#ad-grad-h)' : s.fill}
+                fill={s.fill}
                 stroke={s.stroke}
                 stroke-width="1.2"
               />
@@ -219,7 +219,7 @@ const vLabels = [
                 width={n.w}
                 height="44"
                 rx="11"
-                fill={s.fill === 'url(#__grad__)' ? 'url(#ad-grad-v)' : s.fill}
+                fill={s.fill}
                 stroke={s.stroke}
                 stroke-width="1.2"
               />

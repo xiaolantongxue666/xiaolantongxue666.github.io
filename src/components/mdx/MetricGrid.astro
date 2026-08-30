@@ -15,6 +15,6 @@ const colsClass = {
 }[cols];
 ---
 
-<div class:list={['my-8 gap-8 glass rounded-2xl px-6 py-7 md:px-9 md:py-8', colsClass, 'grid']}>
+<div class:list={['my-8 grid gap-8 rounded-xl border border-line bg-white px-6 py-7 md:px-9 md:py-8', colsClass, 'grid']}>
   {metrics.map((m) => <Metric value={m.value} label={m.label} size="lg" />)}
 </div>

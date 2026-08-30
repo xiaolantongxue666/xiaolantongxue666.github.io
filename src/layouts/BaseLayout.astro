@@ -34,6 +34,12 @@ const canonical = new URL(path ?? Astro.url.pathname, SITE.url).href;
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name}的博客`}
+      href={new URL('/rss.xml', SITE.url).href}
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Open Graph -->
@@ -48,17 +54,7 @@ const canonical = new URL(path ?? Astro.url.pathname, SITE.url).href;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body class="relative isolate flex min-h-screen flex-col">
-    <!-- 极光装饰层：顶部 + 底部柔和光斑（纯 CSS，无动画） -->
-    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] overflow-hidden" aria-hidden="true">
-      <div class="aurora-blob left-1/2 top-[-280px] h-[520px] w-[860px] -translate-x-1/2 bg-violet-400/25"></div>
-      <div class="aurora-blob left-[4%] top-[-200px] h-[380px] w-[520px] bg-cyan-300/30"></div>
-      <div class="aurora-blob right-[2%] top-[-160px] h-[360px] w-[500px] bg-blue-300/25"></div>
-    </div>
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[420px] overflow-hidden" aria-hidden="true">
-      <div class="aurora-blob bottom-[-240px] left-1/2 h-[420px] w-[760px] -translate-x-1/2 bg-cyan-300/20"></div>
-    </div>
-
+  <body class="flex min-h-screen flex-col">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-paper"
@@ -70,5 +66,24 @@ const canonical = new URL(path ?? Astro.url.pathname, SITE.url).href;
       <slot />
     </main>
     <Footer />
+
+    <!-- Section Reveal：进入视口后淡入上移（尊重 prefers-reduced-motion） -->
+    <script>
+      const revealed = document.querySelectorAll<HTMLElement>('.reveal');
+      if (revealed.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        revealed.forEach((el) => io.observe(el));
+      }
+    </script>
   </body>
 </html>

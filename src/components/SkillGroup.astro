@@ -1,14 +1,23 @@
 ---
+/**
+ * Skills 矩阵单元：小标题 + 编号 + 1px 分割线 + 纯文本列表（技术杂志目录感）。
+ */
 interface Props {
   title: string;
+  num: string;
   skills: string[];
 }
-const { title, skills } = Astro.props;
+const { title, num, skills } = Astro.props;
 ---
 
 <div>
-  <h3 class="text-sm font-semibold tracking-wide text-ink">{title}</h3>
-  <ul class="mt-3.5 flex flex-wrap gap-2" role="list" aria-label={`${title} 技能`}>
-    {skills.map((s) => <li class="chip">{s}</li>)}
-  </ul>
+  <div class="flex items-baseline justify-between">
+    <h3 class="text-sm font-semibold tracking-wide text-ink">{title}</h3>
+    <span class="font-mono text-xs text-faint">{num}</span>
+  </div>
+  <div class="mt-3 border-t border-line pt-3.5">
+    <ul role="list" class="space-y-1.5">
+      {skills.map((s) => <li class="font-mono text-[13px] leading-relaxed text-muted">{s}</li>)}
+    </ul>
+  </div>
 </div>

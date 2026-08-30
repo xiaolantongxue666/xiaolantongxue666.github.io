@@ -1,14 +1,13 @@
 ---
-/**
- * 侧边章节锚点：桌面端右侧固定圆点导航，滚动时高亮当前章节。
- */
+/** 侧边章节锚点：桌面端右侧固定圆点导航，滚动时高亮当前章节。 */
 const sections = [
-  { id: 'what-i-do', label: '技术方向' },
-  { id: 'projects', label: '核心项目' },
+  { id: 'about', label: '关于我' },
+  { id: 'capabilities', label: '能做什么' },
+  { id: 'stack', label: '技术栈' },
+  { id: 'work', label: '核心项目' },
   { id: 'experience', label: '实习经历' },
-  { id: 'skills', label: '技术能力' },
   { id: 'education', label: '教育背景' },
-  { id: 'contact', label: '联系方式' },
+  { id: 'connect', label: '联系方式' },
 ];
 ---
 
@@ -23,7 +22,7 @@ const sections = [
         <li>
           <a href={`#${s.id}`} data-dot={s.id} class="group relative flex items-center justify-center p-1">
             <span class="dot" aria-hidden="true" />
-            <span class="pointer-events-none absolute right-6 rounded-full border border-line bg-white/90 px-2.5 py-0.5 text-xs whitespace-nowrap text-muted opacity-0 shadow-card transition-opacity group-hover:opacity-100">
+            <span class="pointer-events-none absolute right-6 rounded-md border border-line bg-white px-2.5 py-0.5 text-xs whitespace-nowrap text-muted opacity-0 shadow-soft transition-opacity group-hover:opacity-100">
               {s.label}
             </span>
             <span class="sr-only">{s.label}</span>
@@ -36,6 +35,7 @@ const sections = [
 
 <script>
   const dots = document.querySelectorAll<HTMLAnchorElement>('#section-dots [data-dot]');
+  const sectionIds = Array.from(dots).map((d) => d.getAttribute('data-dot')!) ;
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -52,14 +52,7 @@ const sections = [
     { rootMargin: '-40% 0px -55% 0px' },
   );
 
-  for (const { id } of [
-    { id: 'what-i-do' },
-    { id: 'projects' },
-    { id: 'experience' },
-    { id: 'skills' },
-    { id: 'education' },
-    { id: 'contact' },
-  ]) {
+  for (const id of sectionIds) {
     const el = document.getElementById(id);
     if (el) observer.observe(el);
   }

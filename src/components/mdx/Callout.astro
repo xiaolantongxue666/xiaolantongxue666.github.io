@@ -6,10 +6,10 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<aside class="my-7 rounded-2xl border border-accent/20 bg-accent/[0.045] px-5 py-4">
+<aside class="my-7 rounded-r-lg border-l-2 border-accent bg-accent/[0.04] px-5 py-4">
   {
     title && (
-      <p class="text-[13px] font-semibold tracking-wide text-accent-deep">{title}</p>
+      <p class="text-[13px] font-semibold tracking-wide text-accent-strong">{title}</p>
     )
   }
   <div class="text-sm leading-[1.85] text-muted [&>p]:!m-0 [&>p]:!max-w-none">

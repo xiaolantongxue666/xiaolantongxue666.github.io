@@ -1,34 +1,60 @@
 ---
 import { SITE } from '../config';
+
+/** Hero 右侧技术目录：编辑式刊物感 */
+const keywords = [
+  { label: 'AI APPLICATION', num: '01' },
+  { label: 'PYTHON / ML', num: '02' },
+  { label: 'KNOWLEDGE GRAPH', num: '03' },
+  { label: 'MODEL ENGINEERING', num: '04' },
+];
 ---
 
-<section class="relative mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 pt-20 pb-14 text-center md:px-8 md:pt-28 md:pb-16">
-  <span class="eyebrow mx-auto">长江大学 · 硕士在读 · 2024 – 2027</span>
+<section class="mx-auto max-w-[1200px] px-5 pt-16 pb-20 md:px-8 md:pt-24 md:pb-28">
+  <div class="grid gap-12 lg:grid-cols-[65%_35%] lg:gap-8">
+    <!-- 左 65%：身份与 CTA -->
+    <div>
+      <div class="flex items-center justify-between font-mono text-xs tracking-[0.18em] text-faint uppercase">
+        <span>01 / Portfolio</span>
+        <span>2026</span>
+      </div>
 
-  <p class="mt-7 text-lg font-medium text-muted md:text-xl">你好，我是</p>
-  <h1 class="mt-2 text-5xl font-bold tracking-tight md:text-7xl">
-    <span class="text-grad">兰永重</span>
-  </h1>
+      <h1 class="mt-8 text-[44px] leading-[0.95] font-semibold tracking-tight text-ink sm:text-[56px] md:text-[72px] xl:text-[80px]">
+        {SITE.name}
+      </h1>
 
-  <p class="mt-5 text-xl font-semibold tracking-tight md:text-2xl">
-    <span class="text-grad">AI Application Developer</span>
-    <span class="text-muted"> · Python / Machine Learning</span>
-  </p>
+      <p class="mt-6 text-xl font-medium tracking-tight text-ink md:text-2xl">
+        AI Application Developer
+      </p>
+      <p class="mt-1 text-xl font-medium tracking-tight text-muted md:text-2xl">
+        Python / Machine Learning
+      </p>
 
-  <p class="mx-auto mt-7 max-w-2xl text-[15px] leading-[1.95] text-muted md:text-base">
-    主要关注大模型应用、RAG / GraphRAG、知识图谱以及 Python
-    与机器学习工程。具有 AI 大模型开发、数据分析、深度学习模型训练和模型部署相关经历，参与并完成过从文档解析、知识构建、模型训练到推理部署的完整技术流程。
-  </p>
+      <p class="mt-7 max-w-[580px] text-[17px] leading-[1.7] text-muted">
+        长江大学硕士在读，关注大模型应用、RAG / GraphRAG、知识图谱与机器学习工程——从文档解析到端侧部署，每一环都亲手做过。
+      </p>
 
-  <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
-    <a href="/projects" class="btn btn-primary">
-      查看项目
-      <span aria-hidden="true">→</span>
-    </a>
-    <a href={`mailto:${SITE.email}`} class="btn btn-secondary">联系我</a>
+      <div class="mt-9 flex flex-wrap items-center gap-3">
+        <a href="/projects" class="btn btn-primary">
+          查看项目
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href={`mailto:${SITE.email}`} class="btn btn-secondary">联系我</a>
+      </div>
+    </div>
+
+    <!-- 右 35%：技术关键词目录 -->
+    <div class="hidden flex-col justify-end lg:flex" aria-hidden="true">
+      <ul role="list" class="space-y-5">
+        {
+          keywords.map((k) => (
+            <li class="flex items-baseline justify-between border-t border-line pt-3">
+              <span class="font-mono text-[13px] tracking-[0.16em] text-muted">{k.label}</span>
+              <span class="font-mono text-xs text-faint">{k.num}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
-
-  <p class="mt-9 font-mono text-xs tracking-wide text-faint">
-    RAG / GraphRAG · Knowledge Graph · PyTorch · ONNX Deployment
-  </p>
 </section>

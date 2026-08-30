@@ -10,16 +10,21 @@ const description =
 ---
 
 <BaseLayout title="项目" description={description} path="/projects">
-  <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 pt-12 pb-24 md:px-8 md:pt-16">
-    <SectionHead
-      center
-      eyebrow="项目案例"
-      title="核心项目"
-      desc="三个项目分别覆盖大模型应用工程、机器学习模型工程与深度学习实验分析。01 为核心 Case Study。"
-    />
+  <section class="zone-dark" aria-labelledby="projects-page-title">
+    <div class="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+      <SectionHead
+        dark
+        center
+        id="projects-page-title"
+        num="05"
+        en="Work"
+        title="Selected Work"
+        desc="三个项目分别覆盖大模型应用工程、机器学习模型工程与深度学习实验分析。01 为核心 Case Study。"
+      />
 
-    <div class="space-y-20 md:space-y-28">
-      {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+      <div class="space-y-20 md:space-y-28">
+        {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+      </div>
     </div>
-  </div>
+  </section>
 </BaseLayout>

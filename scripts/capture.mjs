@@ -10,15 +10,17 @@ mkdirSync(OUT, { recursive: true });
 
 const BASE = 'http://localhost:4321';
 const pages = [
-  { url: '/', prefix: 'v2-projects-desktop-x', width: 1440, vh: 1800 },
+  { url: '/', prefix: 'v6-home-desktop', width: 1440, vh: 1800 },
+  { url: '/projects', prefix: 'v6-projects-desktop', width: 1440, vh: 1800 },
+  { url: '/projects/legal-knowledge-graphrag', prefix: 'v6-graphrag-desktop', width: 1440, vh: 1800 },
+  { url: '/projects/low-altitude-target-recognition', prefix: 'v6-lowalt-desktop', width: 1440, vh: 1800 },
+  { url: '/projects/multimodal-interference-recognition', prefix: 'v6-interf-desktop', width: 1440, vh: 1800 },
+  { url: '/about', prefix: 'v6-about-desktop', width: 1440, vh: 1800 },
+  { url: '/blog', prefix: 'v6-blog-desktop', width: 1440, vh: 1800 },
 ];
 
-const pages2 = [
-  { url: '/projects', prefix: 'v2-projects-desktop', width: 1440, vh: 1800 },
-  { url: '/projects/legal-knowledge-graphrag', prefix: 'v2-graphrag-desktop', width: 1440, vh: 1800 },
-  { url: '/projects/low-altitude-target-recognition', prefix: 'v2-lowalt-desktop', width: 1440, vh: 1800 },
-  { url: '/projects/multimodal-interference-recognition', prefix: 'v2-interf-desktop', width: 1440, vh: 1800 },
-  { url: '/about', prefix: 'v2-about-desktop', width: 1440, vh: 1800 },
+const mobilePages = [
+  { url: '/', prefix: 'v6-home-mobile', width: 390, vh: 1200 },
 ];
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
@@ -54,8 +56,9 @@ async function capture({ url, prefix, width, vh }) {
 }
 
 const results = [];
-for (const p of pages2) {
+for (const p of pages) {
   results.push(await capture(p));
 }
+results.push(await capture(mobilePages[0], ));
 await browser.close();
 console.log(JSON.stringify(results, null, 2));

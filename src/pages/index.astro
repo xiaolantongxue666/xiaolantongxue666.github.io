@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Capabilities from '../components/Capabilities.astro';
 import BentoGrid from '../components/BentoGrid.astro';
 import SectionDots from '../components/SectionDots.astro';
 import SectionHead from '../components/SectionHead.astro';
-import DirectionCard from '../components/DirectionCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import ExperienceTimeline, { type TimelineItem } from '../components/ExperienceTimeline.astro';
+import EditorialCV from '../components/EditorialCV.astro';
 import SkillGroup from '../components/SkillGroup.astro';
 import { SITE } from '../config';
 import { getProjects } from '../lib/projects';
@@ -16,75 +16,128 @@ const description =
 
 const projects = await getProjects();
 
-const timeline: TimelineItem[] = [
+const cv = [
   {
-    period: '2026.05 – 2026.07',
+    period: '2026.05 — 07',
     company: '浮木科技有限公司',
     role: 'AI 大模型开发实习',
-    desc: '参与法律法规智能知识图谱与问答系统开发，覆盖文档解析、知识图谱构建、向量检索和 GraphRAG 等环节，后期独立负责图谱制作模块。',
-    tech: ['Python', 'RAGFlow', 'Neo4j', 'Elasticsearch', 'MinerU', 'DeepDoc', 'Qwen', 'GLM', 'DeepSeek'],
+    project: '法律法规知识图谱与问答系统',
+    tech: ['Document AI', 'GraphRAG', 'Neo4j', 'RAGFlow'],
+    desc: '参与从文档解析、知识图谱构建、向量检索到 GraphRAG 问答的完整链路，后期独立负责图谱制作模块：跨页表格解析、本体约束的知识抽取与多模型交叉校验。',
   },
   {
-    period: '2023.07 – 2023.09',
+    period: '2023.07 — 09',
     company: '北京前锋互联科技有限公司武汉分公司',
     role: '数据分析师实习',
-    desc: '基于 Python、Selenium 和浏览器驱动搭建抖音数据采集流程，对平台数据进行爬取、清洗和结构化处理，并使用 Pandas 进行统计分析和可视化输出。',
-    tech: ['Python', 'Selenium', 'Pandas', 'Data Collection', 'Data Analysis'],
+    project: '抖音数据采集与数据分析',
+    tech: ['Python', 'Selenium', 'Pandas'],
+    desc: '基于 Python、Selenium 和浏览器驱动搭建数据采集流程，完成数据爬取、清洗与结构化整理，使用 Pandas 进行统计分析与可视化输出。',
   },
 ];
 
-const skillGroups = [
-  { title: 'Programming', skills: ['Python', 'SQL', 'Java', 'C'] },
-  { title: 'AI / Machine Learning', skills: ['PyTorch', 'Transformers', 'Machine Learning', 'Deep Learning', 'CNN', 'Transformer'] },
-  { title: 'LLM Applications', skills: ['RAG', 'GraphRAG', 'RAGFlow', 'Prompt Engineering', 'LLM Application Development'] },
-  { title: 'Knowledge & Retrieval', skills: ['Neo4j', 'Elasticsearch', 'ChromaDB', 'Knowledge Graph', 'Vector Retrieval'] },
-  { title: 'Document AI', skills: ['MinerU', 'DeepDoc', 'OCR', 'Document Parsing'] },
-  { title: 'Deployment', skills: ['ONNX', 'Int8 Quantization', 'RK3588', 'Jetson'] },
+const skillMatrix = [
+  { num: '01', title: 'Programming', skills: ['Python', 'SQL', 'Java', 'C'] },
+  { num: '02', title: 'AI / ML', skills: ['PyTorch', 'Transformers', 'Machine Learning', 'Deep Learning'] },
+  { num: '03', title: 'LLM Applications', skills: ['RAG', 'GraphRAG', 'RAGFlow', 'Prompt Engineering'] },
+  { num: '04', title: 'Knowledge & Retrieval', skills: ['Neo4j', 'Elasticsearch', 'ChromaDB', 'Vector Retrieval'] },
+  { num: '05', title: 'Document AI', skills: ['MinerU', 'DeepDoc', 'OCR', 'Document Parsing'] },
+  { num: '06', title: 'Deployment', skills: ['ONNX', 'Int8', 'RK3588', 'Jetson'] },
+];
+
+const pathSteps = [
+  { year: '2023', label: 'Python / Data' },
+  { year: '2025', label: 'ML / DL' },
+  { year: '2026', label: 'RAG / Knowledge Graph' },
 ];
 ---
 
 <BaseLayout title={SITE.name} description={description} path="/">
   <SectionDots />
   <Hero />
-  <BentoGrid />
 
-  <!-- What I Do -->
-  <section id="what-i-do" class="scroll-mt-20" aria-labelledby="what-i-do-title">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
-      <SectionHead
-          center
-          id="what-i-do-title"
-          eyebrow="技术方向"
-          title="两个求职方向，一条技术路径"
-          desc="从 Python 与数据出发，经过机器学习与模型工程，走向 RAG / 知识图谱与大模型应用开发。网站按这条路径完整展示项目与实习经历。"
-      />
-      <div class="grid gap-5 md:grid-cols-2">
-        <DirectionCard
-          title="AI Application Development"
-          subtitle="RAG · GraphRAG · Knowledge Graph"
-          desc="面向真实业务场景进行大模型应用开发，包括非结构化文档解析、RAG、GraphRAG、知识图谱、向量检索以及 Prompt 设计。目前已有法律法规知识库和智能问答系统的完整开发经历。"
-          tags={['RAG', 'GraphRAG', 'Knowledge Graph', 'Neo4j', 'Elasticsearch', 'RAGFlow', 'Prompt Engineering', 'LLM']}
-        />
-        <DirectionCard
-          title="Python & Machine Learning Engineering"
-          subtitle="Python · PyTorch · ONNX"
-          desc="使用 Python 进行数据采集、数据处理、特征工程和模型开发，并具备深度学习训练、模型推理以及 ONNX / Int8 量化部署相关实践。"
-          tags={['Python', 'Pandas', 'PyTorch', 'Transformers', 'Feature Engineering', 'Deep Learning', 'ONNX', 'Model Deployment']}
-        />
+  <!-- 02 / ABOUT -->
+  <section id="about" class="scroll-mt-20" aria-labelledby="about-title">
+    <div class="reveal mx-auto max-w-[1000px] px-5 py-16 md:px-8 md:py-24">
+      <SectionHead num="02" en="About" id="about-title" title="从数据，到模型，再到 AI 应用" />
+
+      <div class="grid gap-12 md:grid-cols-[1fr_240px] md:gap-16">
+        <div class="space-y-5 text-[15px] leading-[2] text-muted md:text-base">
+          <p>
+            我目前是长江大学硕士在读，技术方向集中在 Python、机器学习与 AI
+            大模型应用。
+          </p>
+          <p>
+            我的实践从 Python
+            数据采集与分析开始，之后参与雷达目标识别、多模态干扰识别等机器学习与深度学习项目；2026
+            年在浮木科技实习期间，完成了从文档解析、知识图谱构建到 GraphRAG
+            问答的完整链路。
+          </p>
+          <p>
+            相比只关注模型调用，我更希望理解一个 AI
+            应用从数据进入系统，到解析、检索、模型推理，再到最终业务结果的完整工程链路。
+          </p>
+        </div>
+
+        <!-- 成长路径：年份 + 细线 + 节点 + 关键词 -->
+        <ol class="relative space-y-8 border-l border-line pl-6" role="list">
+          {
+            pathSteps.map((step, i) => (
+              <li class="relative">
+                <span
+                  class:list={[
+                    'absolute top-1 -left-[27px] block size-2.5 rounded-full border-2 border-paper',
+                    i === pathSteps.length - 1 ? 'bg-accent' : 'bg-faint',
+                  ]}
+                  aria-hidden="true"
+                />
+                <p class="font-mono text-sm font-medium text-ink">{step.year}</p>
+                <p class="mt-1 text-sm text-muted">{step.label}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </div>
   </section>
 
-  <!-- Selected Projects：大图交替布局 -->
-  <section id="projects" class="scroll-mt-20" aria-labelledby="selected-projects-title">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
+  <!-- 03 / CAPABILITIES -->
+  <section id="capabilities" class="scroll-mt-20" aria-labelledby="capabilities-title">
+    <div class="reveal mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
       <SectionHead
-          center
-          id="selected-projects-title"
-          eyebrow="精选项目"
-          title="核心项目"
-          desc="三个项目分别覆盖大模型应用工程、机器学习模型工程与深度学习实验分析，构成一条完整的能力证据链。"
+        center
+        id="capabilities-title"
+        num="03"
+        en="Capabilities"
+        title="我能做什么"
       />
+      <Capabilities />
+    </div>
+  </section>
+
+  <!-- 04 / STACK -->
+  <section id="stack" class="scroll-mt-20" aria-labelledby="stack-title">
+    <div class="reveal mx-auto max-w-[1080px] px-5 py-16 md:px-8 md:py-24">
+      <SectionHead center id="stack-title" num="04" en="Stack" title="Tools I Work With" />
+      <div class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {skillMatrix.map((group) => <SkillGroup title={group.title} num={group.num} skills={group.skills} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 / WORK：深色项目展示区 -->
+  <section id="work" class="zone-dark scroll-mt-20" aria-labelledby="work-title">
+    <div class="reveal mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-28">
+      <SectionHead
+        dark
+        center
+        id="work-title"
+        num="05"
+        en="Work"
+        title="Selected Work"
+        desc="三个项目分别覆盖大模型应用工程、机器学习模型工程与深度学习实验分析——01 为核心 Case Study。"
+      />
+
+      <BentoGrid class="mb-20 md:mb-28" />
 
       <div class="space-y-20 md:space-y-28">
         {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
@@ -92,119 +145,86 @@ const skillGroups = [
     </div>
   </section>
 
-  <!-- Experience -->
+  <!-- 06 / EXPERIENCE -->
   <section id="experience" class="scroll-mt-20" aria-labelledby="experience-heading">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
-      <SectionHead center id="experience-heading" eyebrow="实习经历" title="实习与项目经历" />
+    <div class="reveal mx-auto max-w-[1000px] px-5 py-16 md:px-8 md:py-24">
+      <SectionHead center id="experience-heading" num="06" en="Experience" title="Where I've Worked" />
 
-      <!-- 能力路径：2023 → 2025 → 2026（2025 为研究生项目经历） -->
-      <div class="glass mb-14 grid gap-4 rounded-3xl p-6 sm:grid-cols-3 md:p-8">
+      <!-- Career Path：2025 为研究生项目阶段，不作为实习经历表述 -->
+      <div class="mb-3 grid gap-6 border-b border-line pb-10 sm:grid-cols-3">
         {[
-          { year: '2023', label: 'Data / Python' },
-          { year: '2025', label: 'Machine Learning / Model Engineering（研究生项目经历）' },
-          { year: '2026', label: 'RAG / Knowledge Graph / GraphRAG' },
+          { year: '2023', label: 'Data Analysis' },
+          { year: '2025', label: 'Machine Learning' },
+          { year: '2026', label: 'AI Application Engineering' },
         ].map((step, i) => (
-          <div class="flex items-center gap-4 sm:flex-col sm:items-start sm:gap-2">
-            <p class="text-grad font-mono text-xl font-bold">{step.year}</p>
-            <p class="flex-1 text-sm leading-relaxed text-muted">{step.label}</p>
+          <div class="flex items-baseline gap-3 sm:flex-col sm:gap-1.5">
+            <p class="font-mono text-base font-semibold text-ink">{step.year}</p>
+            <p class="font-mono text-[13px] tracking-wide text-muted uppercase">{step.label}</p>
             {i < 2 && (
-              <span class="hidden text-line sm:block" aria-hidden="true">
+              <span class="hidden text-line sm:ml-auto sm:block" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
               </span>
             )}
           </div>
         ))}
       </div>
+      <p class="mb-12 text-xs text-faint">* 2025 为研究生项目阶段，非实习经历。</p>
 
-      <ExperienceTimeline items={timeline} />
+      <EditorialCV items={cv} />
     </div>
   </section>
 
-  <!-- Skills -->
-  <section id="skills" class="scroll-mt-20" aria-labelledby="skills-heading">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
-      <SectionHead center id="skills-heading" eyebrow="技能清单" title="技术能力" />
-      <div class="glass grid gap-x-10 gap-y-10 rounded-3xl p-8 sm:grid-cols-2 md:p-12 lg:grid-cols-3">
-        {skillGroups.map((group) => <SkillGroup title={group.title} skills={group.skills} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- Education -->
+  <!-- 07 / EDUCATION + LET'S CONNECT -->
   <section id="education" class="scroll-mt-20" aria-labelledby="education-heading">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
-      <SectionHead center id="education-heading" eyebrow="求学经历" title="教育背景" />
-      <div class="grid gap-5 md:grid-cols-2">
-        <div class="glass rounded-3xl p-8">
-          <p class="font-mono text-xs tracking-wide text-faint">2024.09 – 2027.07</p>
-          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 硕士在读</h3>
-          <p class="mt-3 text-sm text-muted">主要相关课程</p>
-          <ul class="mt-3 flex flex-wrap gap-2" role="list">
-            {['机器学习', '深度学习', '计算机视觉', '数字图像处理与分析'].map((c) => (
-              <li class="chip">{c}</li>
-            ))}
-          </ul>
-        </div>
-        <div class="glass rounded-3xl p-8">
-          <p class="font-mono text-xs tracking-wide text-faint">2020.09 – 2024.07</p>
-          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 本科</h3>
-          <p class="mt-3 text-sm text-muted">主要相关课程</p>
-          <ul class="mt-3 flex flex-wrap gap-2" role="list">
-            {['Python 程序设计', '数据结构', '信号与系统', '通信原理'].map((c) => (
-              <li class="chip">{c}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+    <div class="reveal mx-auto max-w-[1000px] px-5 pb-10 md:px-8">
+      <SectionHead center id="education-heading" num="07" en="Education" title="Education" />
 
-  <!-- Contact -->
-  <section id="contact" class="scroll-mt-20" aria-labelledby="contact-title">
-    <div class="mx-auto max-w-7xl 2xl:max-w-[88rem] px-5 py-16 md:px-8 md:py-20">
-      <div class="grad-soft relative overflow-hidden rounded-3xl border border-white/70 px-8 py-12 text-center shadow-card md:py-16">
-        <svg
-          class="pointer-events-none absolute -top-24 -right-24 opacity-50"
-          width="300"
-          height="300"
-          viewBox="0 0 300 300"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle cx="150" cy="150" r="148" stroke="url(#contactRing)" stroke-width="1"></circle>
-          <circle cx="150" cy="150" r="100" stroke="url(#contactRing)" stroke-width="1"></circle>
-          <circle cx="150" cy="150" r="52" stroke="url(#contactRing)" stroke-width="1"></circle>
-          <defs>
-            <linearGradient id="contactRing" x1="0" y1="0" x2="300" y2="300">
-              <stop stop-color="#7C3AED" stop-opacity="0.5"></stop>
-              <stop offset="1" stop-color="#0891B2" stop-opacity="0.5"></stop>
-            </linearGradient>
-          </defs>
-        </svg>
-
-        <div id="contact-title">
-          <p class="eyebrow mx-auto">联系方式</p>
-          <h2 class="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">保持联系</h2>
-          <p class="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
-            如果你对我的项目方向感兴趣，欢迎通过邮件联系，我会在第一时间回复。
+      <div class="grid gap-10 sm:grid-cols-2">
+        <div class="border-t border-line pt-6">
+          <p class="font-mono text-xs tracking-wide text-faint">2024 — 2027</p>
+          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 硕士</h3>
+          <p class="mt-3 font-mono text-[13px] leading-relaxed text-muted">
+            Machine Learning · Deep Learning · Computer Vision
           </p>
         </div>
-        <a
-          href={`mailto:${SITE.email}`}
-          class="mt-7 inline-block text-xl font-semibold tracking-tight text-grad underline decoration-accent/30 underline-offset-8 transition-all hover:decoration-accent md:text-2xl"
+        <div class="border-t border-line pt-6">
+          <p class="font-mono text-xs tracking-wide text-faint">2020 — 2024</p>
+          <h3 class="mt-2 text-lg font-semibold text-ink">长江大学 · 本科</h3>
+          <p class="mt-3 font-mono text-[13px] leading-relaxed text-muted">
+            Python · Data Structure · Signal Systems
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="connect" class="scroll-mt-20" aria-labelledby="connect-title">
+    <div class="reveal mx-auto max-w-[1000px] px-5 pt-6 pb-24 md:px-8">
+      <div class="border-t border-line pt-16 text-center">
+        <p class="sec-num mx-auto">Let's Connect</p>
+        <h2
+          id="connect-title"
+          class="mt-5 text-3xl font-semibold tracking-tight text-ink md:text-4xl"
         >
-          {SITE.email}
-        </a>
-        <div class="mt-5">
+          Let's connect.
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
+          对 AI Application、Python / ML
+          以及相关工程岗位保持开放，欢迎通过邮件或 GitHub 交流。
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href={`mailto:${SITE.email}`} class="btn btn-primary">Email me</a>
           <a
             href={SITE.github}
             target="_blank"
             rel="noopener noreferrer"
-            class="arrow-link inline-flex items-center gap-1 text-sm font-medium text-muted transition-colors hover:text-accent-deep"
+            class="btn btn-secondary"
           >
-            GitHub 主页 <span class="arrow" aria-hidden="true">↗</span>
+            GitHub
           </a>
         </div>
+        <p class="mt-6 font-mono text-xs text-faint">{SITE.email}</p>
       </div>
     </div>
   </section>

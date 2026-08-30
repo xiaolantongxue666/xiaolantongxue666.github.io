@@ -1,0 +1,72 @@
+---
+/**
+ * 能做什么：三条横向能力带（Border 优先，hover 轻反馈）。
+ * 每条带 = 编号 + 能力名 + 描述 + Project Evidence + 指标 + 箭头，整条可点击。
+ */
+const bands = [
+  {
+    num: '01',
+    name: 'AI Application Engineering',
+    desc: '从非结构化文档解析、知识抽取，到 RAG / GraphRAG 检索问答。',
+    evidence: '法律法规知识图谱与问答系统',
+    metrics: ['5000+ Nodes', '90% → 95% Recall'],
+    href: '/projects/legal-knowledge-graphrag',
+  },
+  {
+    num: '02',
+    name: 'Machine Learning Engineering',
+    desc: '特征工程、模型设计、训练优化、ONNX 转换与轻量化部署。',
+    evidence: '复杂低空场景目标识别系统',
+    metrics: ['40+ Features', '98.99% Validation Accuracy'],
+    href: '/projects/low-altitude-target-recognition',
+  },
+  {
+    num: '03',
+    name: 'Deep Learning & Multimodal Modeling',
+    desc: 'CNN / Transformer、多模态数据融合、多标签任务与实验分析。',
+    evidence: '多模态深度学习干扰智能识别系统',
+    metrics: ['92.71% Accuracy', '0.8398 Macro F1'],
+    href: '/projects/multimodal-interference-recognition',
+  },
+];
+---
+
+<div class="border-t border-line">
+  {
+    bands.map((band) => (
+      <a
+        href={band.href}
+        class="group grid gap-4 border-b border-line px-2 py-9 transition-colors hover:bg-black/[0.02] md:grid-cols-[3.5rem_1fr_auto] md:items-center md:gap-8 md:px-4 md:py-10"
+      >
+        <span class="font-mono text-sm text-faint transition-colors group-hover:text-accent">
+          {band.num}
+        </span>
+
+        <div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink transition-colors group-hover:text-accent md:text-xl">
+            {band.name}
+          </h3>
+          <p class="mt-2 max-w-xl text-[15px] leading-relaxed text-muted">{band.desc}</p>
+          <p class="mt-3 text-[13px] text-muted">
+            <span class="font-mono text-[11px] tracking-widest text-faint uppercase">Project Evidence</span>
+            <span class="mx-2 text-line" aria-hidden="true">·</span>
+            {band.evidence}
+            {band.metrics.map((m) => (
+              <span class="font-mono text-xs text-ink">
+                <span class="mx-2 text-line" aria-hidden="true">·</span>
+                {m}
+              </span>
+            ))}
+          </p>
+        </div>
+
+        <span
+          class="arrow hidden text-2xl text-faint transition-all group-hover:translate-x-1.5 group-hover:text-accent md:block"
+          aria-hidden="true"
+        >
+          →
+        </span>
+      </a>
+    ))
+  }
+</div>

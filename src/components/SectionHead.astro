@@ -1,25 +1,49 @@
 ---
 interface Props {
-  eyebrow: string;
+  /** 区块编号，如 "02" */
+  num?: string;
+  /** 区块英文名，如 "ABOUT" */
+  en?: string;
+  /** 旧签名兼容：直接传中文小标（如 "项目案例"），优先级低于 num+en */
+  eyebrow?: string;
+  /** 页面可见的叙事标题 */
   title: string;
-  /** 可选的引导说明 */
+  /** 可选说明 */
   desc?: string;
-  /** 居中排版（柔和科技风区块常用） */
+  /** 居中排版 */
   center?: boolean;
   /** 标题 id（供外层 section 的 aria-labelledby 引用） */
   id?: string;
+  /** 深色区（Selected Work） */
+  dark?: boolean;
 }
-const { eyebrow, title, desc, center = false, id } = Astro.props;
+const { num, en, eyebrow, title, desc, center = false, id, dark = false } = Astro.props;
+const secLabel = num && en ? `${num} — ${en}` : (eyebrow ?? '');
 ---
 
-<div class:list={['mb-10 md:mb-14', center && 'text-center']}>
-  <p class="eyebrow" class:list={[center && 'mx-auto']}>{eyebrow}</p>
-  <h2 id={id} class="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">{title}</h2>
+<div class:list={['mb-10 md:mb-12', center && 'text-center']}>
+  {
+    secLabel && (
+      <p class="sec-num" class:list={[center && 'mx-auto']}>
+        {secLabel}
+      </p>
+    )
+  }
+  <h2
+    id={id}
+    class:list={[
+      'mt-4 text-2xl font-semibold tracking-tight md:text-3xl',
+      dark ? 'text-night-text' : 'text-ink',
+    ]}
+  >
+    {title}
+  </h2>
   {
     desc && (
       <p
         class:list={[
-          'mt-3.5 max-w-2xl text-[15px] leading-relaxed text-muted',
+          'mt-3 max-w-2xl text-[15px] leading-relaxed',
+          dark ? 'text-night-muted' : 'text-muted',
           center && 'mx-auto',
         ]}
       >

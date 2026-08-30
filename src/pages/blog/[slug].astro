@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts, formatDate } from '../../lib/blog';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, tags, updated } = post.data;
+const pubDate = formatDate(post.data.pubDate);
+
+const meta = [
+  { label: '发布于', value: pubDate },
+  updated ? { label: '更新于', value: formatDate(updated) } : null,
+].filter((m): m is { label: string; value: string } => m !== null);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={`/blog/${post.id}`}
+  ogType="article"
+  publishedTime={post.data.pubDate.toISOString()}
+>
+  <article class="mx-auto max-w-3xl px-5 pt-12 pb-20 md:px-8 md:pt-16">
+    <header>
+      <a
+        href="/blog"
+        class="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-3.5 py-1.5 text-sm text-muted transition-all hover:border-accent hover:text-accent-strong"
+      >
+        <span aria-hidden="true">←</span> 全部文章
+      </a>
+
+      <h1
+        class="mt-7 text-3xl font-bold leading-tight tracking-tight text-ink md:text-[2.4rem]"
+      >
+        {title}
+      </h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-faint">
+        {
+          meta.map((m) => (
+            <span>
+              {m.label}
+              <time datetime={m.value} class="ml-1 font-mono tracking-wide text-muted">
+                {m.value}
+              </time>
+            </span>
+          ))
+        }
+      </div>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2" aria-label="标签">
+            {tags.map((tag) => (
+              <li class="chip">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="blog-post mt-12 border-t border-line pt-10 md:mt-14">
+      <Content />
+    </div>
+
+    <!-- 较新 / 较早一篇 -->
+    <nav class="mt-14 grid gap-4 border-t border-line pt-8 sm:grid-cols-2" aria-label="文章导航">
+      {
+        newer ? (
+          <a href={`/blog/${newer.id}`} class="group text-sm">
+            <span class="text-faint">← 较新一篇</span>
+            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent">
+              {newer.data.title}
+            </span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        older && (
+          <a href={`/blog/${older.id}`} class="group text-sm sm:text-right">
+            <span class="text-faint">较早一篇 →</span>
+            <span class="mt-1 block font-medium text-ink transition-colors group-hover:text-accent">
+              {older.data.title}
+            </span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+/**
+ * Editorial CV：年份左侧 + 经历右侧，细分隔线，无卡片。
+ */
+export interface CvItem {
+  period: string;
+  company: string;
+  role: string;
+  /** 代表项目名（可选） */
+  project?: string;
+  /** 技术栈（以 · 连接成 mono 行） */
+  tech: string[];
+  desc: string;
+}
+
+interface Props {
+  items: CvItem[];
+}
+const { items } = Astro.props;
+---
+
+<div class="border-t border-line">
+  {
+    items.map((item) => (
+      <div class="grid gap-3 border-b border-line py-10 md:grid-cols-[190px_1fr] md:gap-12">
+        <p class="pt-1 font-mono text-sm text-muted">{item.period}</p>
+
+        <div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">{item.company}</h3>
+          <p class="mt-1 text-sm font-medium text-muted">{item.role}</p>
+          {item.project && (
+            <p class="mt-4 font-mono text-[13px] leading-relaxed text-muted">
+              {item.project}
+              <span class="mx-2 text-line" aria-hidden="true">·</span>
+              {item.tech.join(' · ')}
+            </p>
+          )}
+          <p class="mt-4 max-w-2xl text-[15px] leading-[1.9] text-muted">{item.desc}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>

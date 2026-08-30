@@ -35,4 +35,24 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+const blog = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/blog',
+    // 默认以文件名作为 id：hello-blog.md → /blog/hello-blog
+  }),
+  schema: z.object({
+    title: z.string(),
+    /** 列表页 / RSS / SEO 的一句话描述 */
+    description: z.string(),
+    /** 发布日期（YYYY-MM-DD） */
+    pubDate: z.coerce.date(),
+    /** 最近一次实质修订日期，可选 */
+    updated: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    /** 草稿：构建时排除，dev 模式仍可预览 */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, blog };
