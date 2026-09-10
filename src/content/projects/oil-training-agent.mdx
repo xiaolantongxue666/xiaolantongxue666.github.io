@@ -1,0 +1,113 @@
+---
+slug: oil-training-agent
+order: 2
+title: 油训智安——油气储运教学实训与岗位技能智能体系统
+titleEn: Oil Training Agent System
+summary: 作为项目负责人主导设计的油气储运教学实训智能体系统，基于 FastAPI + Vue3 前后端分离架构与自研 FSM 工作流引擎，实现从意图识别、RAG 检索重排到引用核验的完整问答链路。
+role: 项目负责人
+type: 研究生项目经历
+duration: 2026.07 – 2026.08
+focus: LLM Application / RAG Engineering / Backend Architecture
+tags:
+  - Python
+  - FastAPI
+  - Vue3
+  - PostgreSQL
+  - SQLAlchemy
+  - Qdrant
+  - text-embedding-v3
+  - Qwen
+  - 讯飞星火
+  - Docker Compose
+  - SSE
+  - FSM
+metrics:
+  - value: '7'
+    label: 环节问答链路
+  - value: '416'
+    label: 自动化测试
+  - value: '2核2G'
+    label: 离线部署上线
+---
+
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import PipelineFlow from '../../components/mdx/PipelineFlow.astro';
+import Callout from '../../components/mdx/Callout.astro';
+
+## 问题：教学实训需要一个"可管、可问、可信"的智能体
+
+油气储运教学实训场景中，学员岗位技能训练需要一个能回答专业规程问题、引导补学、并严格按标准作答的智能体。它不是简单的"套壳问答"：答案必须可溯源（引用核验）、流程必须可编排（工作流引擎）、部署必须可在内网离线环境落地。
+
+<Callout title="我的角色">
+  <p>
+    作为<strong>项目负责人</strong>，主导系统架构设计并实现核心后端：自研有限状态机（FSM）工作流引擎编排完整问答链路，搭建 RAG 全链路管线，完成模型网关、安全守卫与 Docker Compose 离线部署。
+  </p>
+</Callout>
+
+## 自研 FSM 工作流引擎：问答链路的骨架
+
+不同于把 LLM 直接暴露给用户，系统用自研有限状态机工作流引擎编排整条问答链路：
+
+<PipelineFlow
+  steps={[
+    '意图识别',
+    '输入守卫',
+    '查询改写',
+    'RAG 检索重排',
+    'LLM 生成',
+    '引用核验',
+    '输出守卫',
+  ]}
+  notes={[
+    '识别用户问题类型，路由到对应处理分支',
+    '拦截 Prompt 注入与危险输入',
+    '对用户查询进行改写优化，提升检索质量',
+    '向量检索 + 重排序，产出候选证据',
+    '基于候选证据生成答案，支持 SSE 流式输出',
+    '对答案中的引用做二次核验',
+    '过滤编造标准编号等不合规输出',
+  ]}
+/>
+
+状态机让每个环节的边界清晰可测——守卫规则可以独立迭代，不会牵连生成逻辑；新增一个处理环节只需要注册状态和转移规则。
+
+## RAG 全链路：从文档到可溯源答案
+
+搭建覆盖"解析→切分→向量化→检索→重排→核验"的完整管线：
+
+- **文档解析与切分**：PDF / DOCX 解析（表格转 Markdown），按章节条款结构化切分，保留"第 X 条"这类条款引用锚点；
+- **向量化与检索**：text-embedding-v3 向量化，Qdrant 检索 top20，重排后取 top5 进入生成环节；
+- **引用核验**：以 LLM 结构化输出对答案引用做二次核验，**无来源不输出**，有效抑制模型编造标准编号与虚构规程。
+
+<MetricGrid
+  metrics={[
+    { value: 'top20 → top5', label: 'Qdrant 检索 + 重排' },
+    { value: '无来源不输出', label: '引用核验策略' },
+  ]}
+  cols={2}
+/>
+
+## LLM 工程化：多模型网关与安全守卫
+
+- **多 Provider 模型网关**：通义千问 / 讯飞星火 / Mock 降级三级接入，支持运行时切换——内网环境不可用外网模型时自动降级，保证系统可用性；
+- **规则化安全守卫**：拦截 Prompt 注入、危险设备指令、编造标准编号，规则独立于生成逻辑，可审计可迭代；
+- **能力画像与自适应补学**：基于 EMA 加权更新学员六维能力画像，驱动"薄弱知识点→补学资源"的闭环，让系统不只是问答，而是教学工具。
+
+## 工程交付：在小服务器上跑起来的完整系统
+
+<MetricGrid
+  metrics={[
+    { value: '59 张', label: '数据库表' },
+    { value: '5 个', label: 'Docker Compose 服务' },
+    { value: '416 个', label: '自动化测试' },
+    { value: 'ruff 零告警', label: '代码质量' },
+  ]}
+/>
+
+完成 Docker Compose 五服务编排（后端 / 前端 / 数据库 / 向量库 / 网关），在 2 核 2G 服务器上完成离线部署上线。416 个自动化测试覆盖工作流状态转移、守卫规则与 RAG 管线，保证链路改动不引入回归。
+
+## 经验与反思
+
+- **工作流引擎的价值在"边界"，不在"功能"。** 状态机拆开后，每个环节可以独立测试、独立替换，这是 416 个测试能真正挡住回归的前提。
+- **"无来源不输出"比"输出更流畅"重要。** 教学场景对错误的容忍度远低于通用问答，宁可让模型说"资料中未找到"，也不能编造标准编号。
+- **2 核 2G 是真实约束，不是玩笑。** 离线部署倒逼每个组件做减法：Qdrant 用小内存模式、LLM 走远程 API 而非本地推理、SSE 流式输出降低首字延迟。

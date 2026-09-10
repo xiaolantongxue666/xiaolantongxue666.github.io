@@ -1,0 +1,95 @@
+---
+slug: iat-antenna-state-recognition
+order: 4
+title: 智能天线调谐状态识别系统（IAT）
+titleEn: Intelligent Antenna Tuning State Recognition
+summary: 面向 96,768 样本、15 类严重不均衡的手机天线调谐状态预测任务，通过幅度差分特征设计与 TinyMLP 模型优化，在 7.75KB 模型体积约束下实现单样本 0.135ms 的端侧推理。
+role: 主力开发
+type: 研究生项目经历
+duration: '2026.06'
+focus: Feature Engineering / Model Optimization / Edge Deployment
+tags:
+  - Python
+  - PyTorch
+  - MLP
+  - Feature Engineering
+  - Class Imbalance
+  - Margin Loss
+  - ONNX
+  - ONNX Runtime
+metrics:
+  - value: 97.75%
+    label: 最终准确率
+  - value: '0.954'
+    label: Macro F1
+  - value: '7.75KB'
+    label: 模型体积
+---
+
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import PipelineFlow from '../../components/mdx/PipelineFlow.astro';
+import Callout from '../../components/mdx/Callout.astro';
+
+## 问题：小模型、强约束下的天线状态分类
+
+手机天线调谐状态预测是典型的端侧分类任务：输入是两组复反射系数等 6 维射频观测，输出是 15 类调谐状态。赛题给了两个硬约束——**模型体积 < 50KB**、CPU 端推理必须足够快，直接排除所有大模型方案。
+
+<Callout title="我的角色">
+  <p>
+    作为<strong>主力开发</strong>，负责特征工程、模型优化与轻量化部署全流程：设计幅度差分特征提升可分性，构建 TinyMLP 并通过多种子验证定型，完成 ONNX 导出与端侧推理验证。
+  </p>
+</Callout>
+
+## 特征工程：6 维到 11 维
+
+原始 6 维射频观测的可分性不足。基于复反射系数的物理特性设计**幅度差分特征**（6 → 11 维），并经特征消融验证：相位特征在任务上无收益，剔除。
+
+<PipelineFlow
+  steps={[
+    '原始观测（6 维）',
+    '幅度差分特征（+5 维）',
+    '特征消融',
+    '剔除相位特征',
+    '11 维输入',
+  ]}
+  notes={[
+    '两组复反射系数等射频观测',
+    '基于反射系数幅度差异设计',
+    '逐特征验证对准确率的贡献',
+    '相位特征无收益，剔除',
+    'MLP 准确率 91.7% → 96.8%',
+  ]}
+/>
+
+特征消融的结论很重要：不是"加特征总没错"，每一维都要用数据证明自己的贡献——这一步把 MLP 准确率从 91.7% 提到 96.8%。
+
+## 模型优化：TinyMLP 与多种子验证
+
+在 11 维特征上构建 TinyMLP 分类模型，组合四项策略应对 15 类严重不均衡：
+
+- **类别平衡权重**：按类别频率反向加权，缓解多数类主导；
+- **易混淆类别对局部 margin loss**：对混淆矩阵上最易混淆的类别对单独施加 margin 约束；
+- **硬样本重采样**：让模型在训练后期反复见到难分样本；
+- **多 checkpoint 权重平均**：训练过程中多个 checkpoint 加权平均，降低单点方差。
+
+<MetricGrid
+  metrics={[
+    { value: '96.8% → 97.75%', label: '最终模型准确率' },
+    { value: '0.954', label: 'Macro F1' },
+    { value: '多种子', label: '验证稳定性' },
+  ]}
+/>
+
+所有结论经**多种子验证**：单一随机种子的提升可能是运气，多种子下的稳定提升才写进报告。最终模型准确率 97.75%、Macro F1 0.954——Macro F1 与准确率接近，说明小类别没有被牺牲。
+
+## 轻量化部署：7.75KB 与 0.135ms
+
+导出 ONNX FP32 模型仅 **7.75KB**（满足赛题 < 50KB 约束），ONNX Runtime 单线程 CPU 端到端推理 **0.135ms/样本**，且精度逐位一致——部署没有引入精度损失。
+
+同样重要的是**否决无效方案的过程**：基于混淆对特征分布诊断，以消融数据先后否决 Focal Loss、EMA、INT8 量化等"听起来该上"的方案——FP32 模型本来就只有 7.75KB，INT8 量化收益小而引入精度风险，不做。
+
+## 经验与反思
+
+- **端侧任务的第一性原理是约束，不是指标。** 体积 < 50KB、CPU 推理够快，这两条约束决定了所有技术选型——先满足约束，再谈提升。
+- **特征贡献要用消融证明。** 相位特征"看起来该有用"，但数据说没有收益，就删掉。每加一维都要付推理成本。
+- **否决方案和采纳方案同样有价值。** 用混淆对分布诊断否决 Focal Loss / INT8，避免了无效优化进入工程链路，也让最终的 7.75KB / 0.135ms 结论可信。
