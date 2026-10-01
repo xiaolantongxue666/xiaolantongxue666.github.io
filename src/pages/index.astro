@@ -12,7 +12,7 @@ import { SITE } from '../config';
 import { getProjects } from '../lib/projects';
 
 const description =
-  '兰永重的个人技术 Portfolio，展示 AI 大模型应用、RAG / GraphRAG、知识图谱、Python、机器学习与模型部署相关项目和实习经历。';
+  '兰永重的个人技术 Portfolio，展示 AI 大模型应用、RAG / GraphRAG、知识图谱、多模态情感预测、机器学习与模型部署相关项目和实习经历。';
 
 const projects = await getProjects();
 
@@ -135,7 +135,7 @@ const pathSteps = [
         num="05"
         en="Work"
         title="Selected Work"
-        desc="五个项目分别覆盖大模型应用工程、后端系统架构、机器学习模型工程与深度学习实验分析——01 为核心 Case Study。"
+        desc={`${projects.length} 个项目覆盖大模型应用工程、后端系统架构、机器学习模型工程、多模态情感预测与可解释分析——01 为核心 Case Study。`}
       />
 
       <BentoGrid class="mb-20 md:mb-28" />

@@ -1,0 +1,82 @@
+---
+slug: multimodal-sentiment-analysis
+order: 6
+title: 复杂场景下多模态情感预测与可解释分析
+titleEn: Multimodal Sentiment Prediction & Interpretability
+summary: 基于 CMU-MOSEI 数据，研究文本、语音、视觉信息局部缺失时的情感分类与强度预测，结合掩码感知门控融合、连续区间缺失增强与可解释分析，完成模型训练、评估及成果交付。
+role: 参与数据处理、建模训练、实验分析及论文撰写
+duration: '2026.09'
+focus: Multimodal Learning / Missing-Modality Robustness / Interpretability
+type: 数学建模竞赛项目
+tags:
+  - Python
+  - PyTorch
+  - OpenCV
+  - BERT
+  - Transformer
+  - Wav2Vec2
+  - FFmpeg
+metrics:
+  - value: 68.64%
+    label: 测试集 Accuracy
+  - value: 64.93%
+    label: 测试集 Macro-F1
+  - value: '0.6505'
+    label: 测试集 MAE
+---
+
+import MetricGrid from '../../components/mdx/MetricGrid.astro';
+import Callout from '../../components/mdx/Callout.astro';
+
+## 项目背景与参与职责
+
+本项目参加 **第二十三届中国研究生数学建模竞赛**（2026.09）。基于 CMU-MOSEI 数据，研究文本、语音、视觉信息局部缺失时的情感分类与强度预测。
+
+参与数据处理、模型设计与训练、实验分析及论文撰写全流程，围绕多模态时间对齐、缺失鲁棒性与预测结果解释展开工作。
+
+## 多模态处理与视觉特征提取
+
+构建覆盖 **100 条原始视频**的处理流程，完成三模态特征提取与时间对齐：
+
+- **视觉特征提取：** 利用 OpenCV 完成人脸区域检测，提取 HOG、HSV 颜色及光流运动特征。
+- **词级对齐与时间映射：** 结合 Wav2Vec2-CTC 词级对齐，将文本、语音和视觉信息映射至统一的 **0.2 秒时间网格**。
+- **有效性与素材追溯：** 保存有效性掩码与原始素材对应关系，供缺失处理与后续解释分析使用。
+
+## 融合模型与缺失鲁棒性
+
+实现 **BERT 掩码感知门控交互网络**，联合完成情感三分类与强度回归：
+
+- **BERT 文本编码：** 对文本信息进行编码。
+- **Transformer 跨模态交互：** 建模文本、语音与视觉之间的交互关系。
+- **自适应门控融合：** 结合有效性掩码进行多模态融合。
+
+引入**连续区间缺失增强**，处理不同模态组合、缺失比例及缺失位置，评估模型在局部信息缺失条件下的表现。
+
+## 实验设计与量化评估
+
+基于 **4,850 条样本**完成 **7 组模型对照**及 **105 种局部缺失条件评估**，分析增强策略、门控和模态交互的影响。
+
+最终模型在 **727 条测试样本**上取得以下结果：
+
+<MetricGrid
+  metrics={[
+    { value: '68.64%', label: '测试集 Accuracy' },
+    { value: '64.93%', label: '测试集 Macro-F1' },
+    { value: '0.6505', label: '测试集 MAE' },
+  ]}
+  cols={3}
+/>
+
+<Callout title="指标口径">
+  <p>
+    Accuracy 与 Macro-F1 用于评估情感三分类，MAE 用于评估情感强度回归。以上结果对应最终模型在 <strong>727 条测试样本</strong>上的表现。
+  </p>
+</Callout>
+
+## 可解释分析与成果交付
+
+结合**精确 Shapley 贡献计算**与**多尺度窗口遮蔽**，定位关键文本、语音时段和视频帧，并通过删除与保留实验检验解释效果。
+
+- 完成 **30 条缺失专项预测**。
+- 完成 **20 条带媒体证据的离线解释卡**。
+- 整理模型权重、推理代码与复现文档，并参与论文撰写。
