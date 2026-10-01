@@ -14,9 +14,10 @@ interface Props {
   ogType?: 'website' | 'article';
   /** 文章类页面可传发布时间 */
   publishedTime?: string;
+  theme?: 'default' | 'technical';
 }
 
-const { title, description, path, ogType = 'website', publishedTime } = Astro.props;
+const { title, description, path, ogType = 'website', publishedTime, theme = 'default' } = Astro.props;
 
 const fullTitle =
   title === SITE.name ? `${SITE.name} | ${SITE.role} · ${SITE.roleSub}` : `${title} | ${SITE.name}`;
@@ -54,7 +55,7 @@ const canonical = new URL(path ?? Astro.url.pathname, SITE.url).href;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body class="flex min-h-screen flex-col">
+  <body class="flex min-h-screen flex-col" data-theme={theme}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-paper"

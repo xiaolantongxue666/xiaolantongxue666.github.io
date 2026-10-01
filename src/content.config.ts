@@ -16,6 +16,8 @@ const projects = defineCollection({
     titleEn: z.string(),
     /** 首页 / 列表页的一句话简介 */
     summary: z.string(),
+    /** 项目详情的展示模板；默认保留编辑式布局 */
+    presentation: z.enum(['default', 'technical']).default('default'),
     /** 详情页 Project Hero 元信息 */
     role: z.string().optional(),
     company: z.string().optional(),

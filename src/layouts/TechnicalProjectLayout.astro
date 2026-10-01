@@ -1,0 +1,79 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SentimentSignalLab from '../components/projects/SentimentSignalLab.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getProjects } from '../lib/projects';
+import '../styles/technical-project.css';
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const { title, titleEn, summary, duration, metrics, tags } = project.data;
+const projects = await getProjects();
+const index = projects.findIndex((entry) => entry.id === project.id);
+const previous = projects[index - 1];
+const next = projects[index + 1];
+const sections = [
+  { id: 'data', label: '数据工程', code: 'data' },
+  { id: 'architecture', label: '模型架构', code: 'model' },
+  { id: 'evaluation', label: '实验评估', code: 'eval' },
+  { id: 'interpretability', label: '可解释分析', code: 'explain' },
+];
+---
+
+<BaseLayout title={title} description={summary} path={`/projects/${project.data.slug}`} ogType="article" theme="technical">
+  <article class="research-page">
+    <div class="research-shell">
+      <div class="research-breadcrumb">
+        <a href="/projects">← 所有项目</a>
+        <span class="research-mono">research / multimodal-sentiment</span>
+        <time datetime="2026-09">{duration}</time>
+      </div>
+
+      <header class="research-hero">
+        <div class="research-intro">
+          <p class="research-context">第二十三届中国研究生数学建模竞赛</p>
+          <h1>{title.split(/(?=多模态|与可解释)/).map((line) => <span>{line}</span>)}</h1>
+          <p class="research-english">{titleEn}</p>
+          <p class="research-lead">当文本、语音与画面局部缺失，模型如何理解情感，又如何解释判断？</p>
+          <p class="research-summary">基于 CMU-MOSEI，构建从三模态对齐、掩码感知融合到证据定位的完整实验流程，联合完成情感三分类与强度回归。</p>
+          <div class="research-actions">
+            <a class="research-primary" href="#architecture">查看模型架构 <span aria-hidden="true">↘</span></a>
+            <a class="research-secondary" href="#evaluation">实验结果</a>
+          </div>
+        </div>
+        <SentimentSignalLab />
+      </header>
+
+      <div class="research-results" aria-label="最终模型测试结果">
+        <div class="research-results-caption"><span class="research-mono">test / 727 samples</span><p>最终模型 · 测试集</p></div>
+        {metrics.map((metric) => (
+          <div class="research-result">
+            <span class="research-result-value">{metric.value}</span>
+            <span class="research-result-label">{metric.label.replace('测试集 ', '')}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="research-role">
+        <span class="research-mono">contribution</span>
+        <p>参与数据处理、模型设计与训练、实验分析及论文撰写全流程。</p>
+      </div>
+
+      <nav class="research-nav" aria-label="项目章节">
+        {sections.map((section) => <a href={`#${section.id}`}><span>{section.code}</span>{section.label}</a>)}
+      </nav>
+
+      <div class="research-content"><slot /></div>
+
+      <section class="research-stack" aria-labelledby="stack-heading">
+        <h2 id="stack-heading">技术栈</h2>
+        <ul>{tags.map((tag) => <li>{tag}</li>)}</ul>
+      </section>
+
+      <nav class="research-project-nav" aria-label="项目导航">
+        {previous && <a href={`/projects/${previous.data.slug}`}><span>← 上一篇</span>{previous.data.title}</a>}
+        {next ? <a href={`/projects/${next.data.slug}`}><span>下一篇 →</span>{next.data.title}</a> : <a href="/projects"><span>继续探索</span>查看全部项目 →</a>}
+      </nav>
+    </div>
+  </article>
+</BaseLayout>

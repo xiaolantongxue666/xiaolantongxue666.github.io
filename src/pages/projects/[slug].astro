@@ -1,5 +1,6 @@
 ---
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import TechnicalProjectLayout from '../../layouts/TechnicalProjectLayout.astro';
 import { getProjects } from '../../lib/projects';
 import { render } from 'astro:content';
 
@@ -13,8 +14,9 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const Layout = project.data.presentation === 'technical' ? TechnicalProjectLayout : ProjectLayout;
 ---
 
-<ProjectLayout project={project}>
+<Layout project={project}>
   <Content />
-</ProjectLayout>
+</Layout>

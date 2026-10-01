@@ -1,6 +1,7 @@
 ---
 slug: multimodal-sentiment-analysis
 order: 6
+presentation: technical
 title: 复杂场景下多模态情感预测与可解释分析
 titleEn: Multimodal Sentiment Prediction & Interpretability
 summary: 基于 CMU-MOSEI 数据，研究文本、语音、视觉信息局部缺失时的情感分类与强度预测，结合掩码感知门控融合、连续区间缺失增强与可解释分析，完成模型训练、评估及成果交付。
@@ -25,58 +26,119 @@ metrics:
     label: 测试集 MAE
 ---
 
-import MetricGrid from '../../components/mdx/MetricGrid.astro';
-import Callout from '../../components/mdx/Callout.astro';
+<section class="research-section" id="data" aria-labelledby="data-title">
+  <header class="research-section-heading">
+    <span class="research-section-label">01 / data engineering</span>
+    <h2 id="data-title">先对齐时间，<br />再融合信息。</h2>
+    <p>将异构媒体转换为可追溯、带有效性掩码的统一时序输入。</p>
+  </header>
+  <div class="research-section-body">
+    <p>基于 <strong>CMU-MOSEI</strong> 数据，构建覆盖 <strong>100 条原始视频</strong>的处理流程。文本、语音和视觉映射至统一的 <strong>0.2 秒时间网格</strong>，保存有效性掩码及原始素材对应关系。</p>
+    <dl class="research-spec">
+      <div><dt>source videos</dt><dd>100 条</dd></div>
+      <div><dt>temporal resolution</dt><dd>0.2 秒</dd></div>
+    </dl>
+    <div class="research-methods">
+      <div class="research-method" data-modality="vision">
+        <span class="research-method-mark" aria-hidden="true">[V]</span>
+        <div><h3>从视频帧提取视觉信号</h3><p>利用 OpenCV 完成人脸区域检测，提取 HOG、HSV 颜色及光流运动特征，覆盖形状、颜色和运动信息。</p></div>
+      </div>
+      <div class="research-method">
+        <span class="research-method-mark" aria-hidden="true">[A]</span>
+        <div><h3>词级对齐与时间映射</h3><p>结合 Wav2Vec2-CTC 词级对齐，将三模态信息映射至共同时间轴，为跨模态交互提供对应关系。</p></div>
+      </div>
+      <div class="research-method" data-modality="mask">
+        <span class="research-method-mark" aria-hidden="true">[M]</span>
+        <div><h3>保留有效性与素材索引</h3><p>保存有效性掩码，标记输入的可用状态；保留特征与原始素材的对应关系，支持后续关键文本、语音时段和视频帧定位。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-## 项目背景与参与职责
+<section class="research-section" id="architecture" aria-labelledby="architecture-title">
+  <header class="research-section-heading">
+    <span class="research-section-label">02 / model architecture</span>
+    <h2 id="architecture-title">感知缺失，<br />学习模态交互。</h2>
+    <p>BERT 掩码感知门控交互网络，联合完成情感分类与强度回归。</p>
+  </header>
+  <div class="research-section-body">
+    <p>使用 <strong>BERT 文本编码</strong>、<strong>Transformer 跨模态交互</strong>及<strong>自适应门控融合</strong>，将文本、语音和视觉信息汇入联合预测流程。</p>
+    <figure class="research-architecture">
+      <figcaption>模型计算流程 · 架构示意</figcaption>
+      <div class="research-inputs">
+        <div class="research-node" data-modality="text"><span class="research-node-code">text</span><h3>BERT 编码</h3><p>文本语义</p></div>
+        <div class="research-node" data-modality="audio"><span class="research-node-code">audio</span><h3>语音输入</h3><p>词级时间对齐</p></div>
+        <div class="research-node" data-modality="vision"><span class="research-node-code">vision</span><h3>视觉特征</h3><p>HOG / HSV / 光流</p></div>
+      </div>
+      <div class="research-flow-arrow" aria-hidden="true">↓</div>
+      <div class="research-node"><h3>Transformer 跨模态交互</h3><p>建模文本、语音与视觉之间的交互关系</p></div>
+      <div class="research-flow-arrow" aria-hidden="true">↓</div>
+      <div class="research-node research-node-fusion"><h3>掩码感知 · 自适应门控融合</h3><p>有效性掩码 + 多模态信息</p></div>
+      <div class="research-flow-arrow" aria-hidden="true">↓</div>
+      <div class="research-outputs">
+        <div class="research-node"><span class="research-node-code">classification</span><h3>情感三分类</h3></div>
+        <div class="research-node"><span class="research-node-code">regression</span><h3>情感强度回归</h3></div>
+      </div>
+      <p class="research-architecture-foot">三模态输入统一至 0.2 秒时间网格；图中展示主要模块与任务关系。</p>
+    </figure>
+    <div class="research-methods">
+      <div class="research-method"><span class="research-method-mark" aria-hidden="true">[×]</span><div><h3>连续区间缺失增强</h3><p>在连续时段模拟局部信息缺失，处理不同模态组合、缺失比例及缺失位置，评估模型对不完整输入的适应能力。</p></div></div>
+    </div>
+    <details class="research-disclosure">
+      <summary>为什么同时保留对齐、掩码和原始素材关系？</summary>
+      <p>时间对齐建立模态间的对应；有效性掩码保留输入是否可用的信息；原始素材关系使解释结果能够回到具体文本、语音时段和视频帧。三者分别服务于交互建模、缺失处理与证据追溯。</p>
+    </details>
+  </div>
+</section>
 
-本项目参加 **第二十三届中国研究生数学建模竞赛**（2026.09）。基于 CMU-MOSEI 数据，研究文本、语音、视觉信息局部缺失时的情感分类与强度预测。
+<section class="research-section" id="evaluation" aria-labelledby="evaluation-title">
+  <header class="research-section-heading">
+    <span class="research-section-label">03 / evaluation</span>
+    <h2 id="evaluation-title">从模型对照，<br />到缺失条件评估。</h2>
+    <p>围绕增强策略、门控和模态交互设计实验，分析各部分的影响。</p>
+  </header>
+  <div class="research-section-body">
+    <div class="research-scope" aria-label="实验覆盖范围">
+      <div><span class="research-scope-value">4,850</span><p>实验样本</p></div>
+      <div><span class="research-scope-value">7</span><p>组模型对照</p></div>
+      <div><span class="research-scope-value">105</span><p>种局部缺失条件</p></div>
+    </div>
+    <p>基于 <strong>4,850 条样本</strong>完成 <strong>7 组模型对照</strong>及 <strong>105 种局部缺失条件评估</strong>，覆盖不同模态组合、缺失比例及缺失位置。最终模型在 <strong>727 条测试样本</strong>上取得以下结果。</p>
+    <div class="research-table-wrap">
+      <table class="research-table">
+        <caption>最终模型测试结果 · n = 727</caption>
+        <thead><tr><th scope="col">指标</th><th scope="col">结果</th><th scope="col">评估任务</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Accuracy ↑</th><td>68.64%</td><td>情感三分类</td></tr>
+          <tr><th scope="row">Macro-F1 ↑</th><td>64.93%</td><td>情感三分类</td></tr>
+          <tr><th scope="row">MAE ↓</th><td>0.6505</td><td>情感强度回归</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="research-note">Accuracy 与 Macro-F1 评估分类表现，MAE 评估回归误差。以上为最终模型的测试集结果；105 种局部缺失条件是实验覆盖范围。</p>
+    <details class="research-disclosure">
+      <summary>查看实验分析维度</summary>
+      <p><strong>增强策略：</strong>分析连续区间缺失增强的影响。<br /><strong>融合机制：</strong>分析自适应门控与跨模态交互的作用。<br /><strong>缺失条件：</strong>从模态组合、缺失比例和缺失位置三个维度开展评估。</p>
+    </details>
+  </div>
+</section>
 
-参与数据处理、模型设计与训练、实验分析及论文撰写全流程，围绕多模态时间对齐、缺失鲁棒性与预测结果解释展开工作。
-
-## 多模态处理与视觉特征提取
-
-构建覆盖 **100 条原始视频**的处理流程，完成三模态特征提取与时间对齐：
-
-- **视觉特征提取：** 利用 OpenCV 完成人脸区域检测，提取 HOG、HSV 颜色及光流运动特征。
-- **词级对齐与时间映射：** 结合 Wav2Vec2-CTC 词级对齐，将文本、语音和视觉信息映射至统一的 **0.2 秒时间网格**。
-- **有效性与素材追溯：** 保存有效性掩码与原始素材对应关系，供缺失处理与后续解释分析使用。
-
-## 融合模型与缺失鲁棒性
-
-实现 **BERT 掩码感知门控交互网络**，联合完成情感三分类与强度回归：
-
-- **BERT 文本编码：** 对文本信息进行编码。
-- **Transformer 跨模态交互：** 建模文本、语音与视觉之间的交互关系。
-- **自适应门控融合：** 结合有效性掩码进行多模态融合。
-
-引入**连续区间缺失增强**，处理不同模态组合、缺失比例及缺失位置，评估模型在局部信息缺失条件下的表现。
-
-## 实验设计与量化评估
-
-基于 **4,850 条样本**完成 **7 组模型对照**及 **105 种局部缺失条件评估**，分析增强策略、门控和模态交互的影响。
-
-最终模型在 **727 条测试样本**上取得以下结果：
-
-<MetricGrid
-  metrics={[
-    { value: '68.64%', label: '测试集 Accuracy' },
-    { value: '64.93%', label: '测试集 Macro-F1' },
-    { value: '0.6505', label: '测试集 MAE' },
-  ]}
-  cols={3}
-/>
-
-<Callout title="指标口径">
-  <p>
-    Accuracy 与 Macro-F1 用于评估情感三分类，MAE 用于评估情感强度回归。以上结果对应最终模型在 <strong>727 条测试样本</strong>上的表现。
-  </p>
-</Callout>
-
-## 可解释分析与成果交付
-
-结合**精确 Shapley 贡献计算**与**多尺度窗口遮蔽**，定位关键文本、语音时段和视频帧，并通过删除与保留实验检验解释效果。
-
-- 完成 **30 条缺失专项预测**。
-- 完成 **20 条带媒体证据的离线解释卡**。
-- 整理模型权重、推理代码与复现文档，并参与论文撰写。
+<section class="research-section" id="interpretability" aria-labelledby="interpretability-title">
+  <header class="research-section-heading">
+    <span class="research-section-label">04 / interpretability</span>
+    <h2 id="interpretability-title">让预测结果，<br />回到媒体证据。</h2>
+    <p>贡献计算、时段定位与解释验证，连接模型输出和原始素材。</p>
+  </header>
+  <div class="research-section-body">
+    <ol class="research-evidence">
+      <li><div><h3>计算贡献</h3><p>使用<strong>精确 Shapley 贡献计算</strong>，分析多模态信息对预测的贡献。</p></div></li>
+      <li><div><h3>定位关键证据</h3><p>结合<strong>多尺度窗口遮蔽</strong>，定位关键文本、语音时段和视频帧，并对应至原始素材。</p></div></li>
+      <li><div><h3>检验解释效果</h3><p>通过<strong>删除与保留实验</strong>检验解释效果，将分析结果整理为带媒体证据的离线解释卡。</p></div></li>
+    </ol>
+    <div class="research-delivery" aria-label="成果交付">
+      <p><strong>30</strong>条缺失专项预测</p>
+      <p><strong>20</strong>条带媒体证据的离线解释卡</p>
+    </div>
+    <p style="margin-top: 22px; margin-bottom: 0">整理<strong>模型权重、推理代码与复现文档</strong>，并参与论文撰写，完成从数据处理、建模训练到实验分析与成果交付的全流程工作。</p>
+  </div>
+</section>
